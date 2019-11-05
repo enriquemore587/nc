@@ -13,20 +13,17 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-@Component
 public class StorageManagerImpl implements StorageManager {
 
     public static Logger LOG = LoggerFactory.getLogger(StorageManagerImpl.class);
 
     @Override
     public void saveDevice(Object obj) throws StorageException {
-        LOG.info(StorageUtility.LOG_STARTING);
         HttpClient httpClient = new DefaultHttpClient();
         try {
             String path = String.format("/s/v1/url");
@@ -50,7 +47,6 @@ public class StorageManagerImpl implements StorageManager {
             LOG.error("Uncontrolled error");
             throw new StorageUtility.InternalServerError(e.getMessage(), e.getCause().hashCode());
         }
-        LOG.info(StorageUtility.LOG_FINISHED);
     }
 
     @Override

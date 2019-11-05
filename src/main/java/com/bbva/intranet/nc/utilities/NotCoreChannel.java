@@ -1,12 +1,12 @@
-package com.bbva.intranet.ns.utilities;
+package com.bbva.intranet.nc.utilities;
 
-public enum NSChannel {
+public enum NotCoreChannel {
 
     GNOTIFIER("gnotifier"),
     FCM("fcm");
     public String value;
 
-    NSChannel(String value) {
+    NotCoreChannel(String value) {
         this.value = value;
     }
 

@@ -10,13 +10,9 @@ import com.bbva.intranet.senders.domain.responses.TopicResp;
 import com.bbva.intranet.senders.exceptions.SenderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
-@Component
-@Qualifier("fcm")
 public class FCMImpl implements Sender {
 
     public static Logger LOG = LoggerFactory.getLogger(FCMImpl.class);
@@ -27,12 +23,12 @@ public class FCMImpl implements Sender {
     }
 
     @Override
-    public void send(PushNotification pushNotification) throws SenderException {
+    public void sendNotification(PushNotification pushNotification) throws SenderException {
 
     }
 
     @Override
-    public void multiSend(Set<PushNotification> notifications) throws SenderException {
+    public void multiSendNotification(Set<PushNotification> notifications) throws SenderException {
 
     }
 

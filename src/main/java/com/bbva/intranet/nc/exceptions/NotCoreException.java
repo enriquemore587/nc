@@ -1,6 +1,6 @@
-package com.bbva.intranet.ns.exceptions;
+package com.bbva.intranet.nc.exceptions;
 
-public class NotifierSystemException extends Exception {
+public class NotCoreException extends Exception {
 
     private String message;
     private Integer code;
@@ -13,7 +13,7 @@ public class NotifierSystemException extends Exception {
      * @param message the detail message. The detail message is saved for
      *                later retrieval by the {@link #getMessage()} method.
      */
-    public NotifierSystemException(String message) {
+    public NotCoreException(String message) {
         super(message);
         this.message = message;
     }
@@ -23,7 +23,7 @@ public class NotifierSystemException extends Exception {
      * The cause is not initialized, and may subsequently be initialized by a
      * call to {@link #initCause}.
      */
-    public NotifierSystemException(String message, Integer code) {
+    public NotCoreException(String message, Integer code) {
         this.message = message;
         this.code = code;
     }

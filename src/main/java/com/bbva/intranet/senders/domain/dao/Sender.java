@@ -14,8 +14,8 @@ public interface Sender {
 
     void register(UserDeviceRegister userDeviceRegister) throws SenderException;
 
-    void send(PushNotification pushNotification) throws SenderException;
-    void multiSend(Set<PushNotification> notifications) throws SenderException;
+    void sendNotification(PushNotification pushNotification) throws SenderException;
+    void multiSendNotification(Set<PushNotification> notifications) throws SenderException;
 
     TopicResp topicsBySenderEmail(Integer pageSize, Integer paginationKey) throws SenderException;
 

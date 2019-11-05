@@ -1,6 +1,5 @@
 package com.bbva.intranet.senders.domain.dao.impl;
 
-import com.bbva.intranet.ns.utilities.NSUtility;
 import com.bbva.intranet.senders.domain.dao.Sender;
 import com.bbva.intranet.senders.domain.requests.UserToSubscribe;
 import com.bbva.intranet.senders.domain.requests.UserToUnSubscribe;
@@ -18,29 +17,28 @@ import com.fga.oauth.client.GatewayClient;
 import com.fga.oauth.client.utils.OAuthResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-@Component
-@Qualifier("gn")
+import static com.bbva.intranet.nc.utilities.NotCoreUtility.NC_SENDER_EMAIL;
+import static com.bbva.intranet.nc.utilities.NotCoreUtility.NC_SENDER_ID;
+
 public class GNotifierImpl implements Sender {
 
     public static Logger LOG = LoggerFactory.getLogger(GNotifierImpl.class);
 
     @Override
     public void register(UserDeviceRegister userDeviceRegister) throws SenderException {
-        GatewayClient client = new GatewayClient(NSUtility.NS_SENDER_EMAIL);
+        GatewayClient client = new GatewayClient(NC_SENDER_EMAIL);
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
         client.setEncodeQueryParams(true);
         String jsonData = GsonGAEUtility.objectToJson(userDeviceRegister);
         try {
             String servicePath = "/register";
-            LOG.info(String.format("sender email: %s, Method: POST, URL: %s, BODY: %s", NSUtility.NS_SENDER_EMAIL, servicePath, jsonData));
+            LOG.info(String.format("sender email: %s, Method: POST, URL: %s, BODY: %s", NC_SENDER_EMAIL, servicePath, jsonData));
             OAuthResponse oAuthResponse = client.doPost("gnotifier", servicePath, null, jsonData.getBytes());
             if (oAuthResponse == null) throw new SenderException("oAuthResponse is null.");
             else GNUtil.checkResponse(oAuthResponse);
@@ -51,15 +49,15 @@ public class GNotifierImpl implements Sender {
     }
 
     @Override
-    public void send(PushNotification pushNotification) throws SenderException {
-        GatewayClient client = new GatewayClient(NSUtility.NS_SENDER_EMAIL);
+    public void sendNotification(PushNotification pushNotification) throws SenderException {
+        GatewayClient client = new GatewayClient(NC_SENDER_EMAIL);
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
         client.setEncodeQueryParams(true);
         String jsonData = GsonGAEUtility.objectToJson(pushNotification);
         try {
             String servicePath = "/notifications";
-            LOG.info(String.format("sender email: %s, Method: POST, URL: %s, BODY: %s", NSUtility.NS_SENDER_EMAIL, servicePath, jsonData));
+            LOG.info(String.format("sender email: %s, Method: POST, URL: %s, BODY: %s", NC_SENDER_EMAIL, servicePath, jsonData));
             OAuthResponse oAuthResponse = client.doPost("gnotifier", servicePath, null, jsonData.getBytes());
             if (oAuthResponse == null) throw new GNotifierException("GN | oAuthResponse is null");
             else GNUtil.checkResponse(oAuthResponse);
@@ -70,11 +68,11 @@ public class GNotifierImpl implements Sender {
     }
 
     @Override
-    public void multiSend(Set<PushNotification> notifications) throws SenderException {
+    public void multiSendNotification(Set<PushNotification> notifications) throws SenderException {
         int count = 0;
         for (PushNotification notification : notifications) {
             try {
-                send(notification);
+                sendNotification(notification);
             } catch (SenderException e) {
                 count++;
             }
@@ -85,7 +83,7 @@ public class GNotifierImpl implements Sender {
 
     @Override
     public TopicResp topicsBySenderEmail(Integer pageSize, Integer paginationKey) throws SenderException {
-        GatewayClient client = new GatewayClient(NSUtility.NS_SENDER_EMAIL);
+        GatewayClient client = new GatewayClient(NC_SENDER_EMAIL);
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
         client.setEncodeQueryParams(true);
@@ -94,7 +92,7 @@ public class GNotifierImpl implements Sender {
         queryParams.put("paginationKey", paginationKey.toString());
         try {
             String servicePath = "/topics";
-            LOG.info(String.format("Method: GET, URL: %s, QUERY_PARAMS: [%s]", servicePath, queryParams));
+            LOG.info(String.format("sender email: %s, Method: GET, URL: %s, QUERY_PARAMS: [%s]", NC_SENDER_EMAIL, servicePath, queryParams));
             OAuthResponse oAuthResponse = client.doGet("gnotifier", servicePath, queryParams);
             if (oAuthResponse == null) throw new SenderException("oAuthResponse is null.");
             else {
@@ -102,20 +100,21 @@ public class GNotifierImpl implements Sender {
                 return (TopicResp) response.getData();
             }
         } catch (OAuthClientException e) {
-            throw new SenderException(String.format("GN | Couldn't fetch results to %s", NSUtility.NS_SENDER_EMAIL));
+            throw new SenderException(String.format("GN | Couldn't fetch results to %s", NC_SENDER_EMAIL));
         }
     }
 
     @Override
     public void createTopic(Topic topic) throws SenderException {
-        GatewayClient client = new GatewayClient(NSUtility.NS_SENDER_EMAIL);
+        GatewayClient client = new GatewayClient(NC_SENDER_EMAIL);
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
         client.setEncodeQueryParams(true);
+        topic.setSender_id(NC_SENDER_ID);
         String jsonData = GsonGAEUtility.objectToJson(topic);
         try {
             String servicePath = "/topics";
-            LOG.info(String.format("SenderEmail: %s, Method: POST, URL: %s, BODY: %s", NSUtility.NS_SENDER_EMAIL, servicePath, jsonData));
+            LOG.info(String.format("sender email: %s, Method: POST, URL: %s, BODY: %s", NC_SENDER_EMAIL, servicePath, jsonData));
             OAuthResponse oAuthResponse = client.doPost("gnotifier", servicePath, null, jsonData.getBytes());
             if (oAuthResponse == null) throw new SenderException("GN | oAuthResponse is null.");
             else GNUtil.checkResponse(oAuthResponse);
@@ -127,14 +126,14 @@ public class GNotifierImpl implements Sender {
 
     @Override
     public void deleteTopic(String topicName) throws SenderException {
-        GatewayClient client = new GatewayClient(NSUtility.NS_SENDER_EMAIL);
+        GatewayClient client = new GatewayClient(NC_SENDER_EMAIL);
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
         client.setEncodeQueryParams(true);
         String servicePath = "";
         try {
             servicePath = String.format("/topics/%s", topicName);
-            LOG.info(String.format("Method: DELETE, URL: %s", servicePath));
+            LOG.info(String.format("sender email %s, Method: DELETE, URL: %s", NC_SENDER_EMAIL, servicePath));
             OAuthResponse oAuthResponse = client.doDelete("gnotifier", servicePath, null);
             if (oAuthResponse == null) throw new SenderException("GN | oAuthResponse is null.");
             else GNUtil.checkResponse(oAuthResponse);
@@ -146,14 +145,14 @@ public class GNotifierImpl implements Sender {
 
     @Override
     public void updateTopic(String topicName, Topic topic) throws SenderException {
-        GatewayClient client = new GatewayClient(NSUtility.NS_SENDER_EMAIL);
+        GatewayClient client = new GatewayClient(NC_SENDER_EMAIL);
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
         client.setEncodeQueryParams(true);
         String jsonData = GsonGAEUtility.objectToJson(topic);
         try {
             String servicePath = String.format("/topics/%s", topicName);
-            LOG.info(String.format("Method: PUT, URL: %s, BODY: [%s]", servicePath, jsonData));
+            LOG.info(String.format("sender email: %s, Method: PUT, URL: %s, BODY: [%s]", NC_SENDER_EMAIL, servicePath, jsonData));
             OAuthResponse oAuthResponse = client.doPut("gnotifier", servicePath, null, jsonData.getBytes());
             if (oAuthResponse == null) throw new SenderException("GN | oAuthResponse is null.");
             else GNUtil.checkResponse(oAuthResponse);
@@ -165,14 +164,14 @@ public class GNotifierImpl implements Sender {
 
     @Override
     public void subscribeUserIntoTopic(String topicName, UserToSubscribe userToSubscribe) throws SenderException {
-        GatewayClient client = new GatewayClient(NSUtility.NS_SENDER_EMAIL);
+        GatewayClient client = new GatewayClient(NC_SENDER_EMAIL);
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
         client.setEncodeQueryParams(true);
         String jsonData = GsonGAEUtility.objectToJson(userToSubscribe);
         try {
             String servicePath = String.format("/topics/%s/users", topicName);
-            LOG.info(String.format("SenderEmail: %s, Method: POST, URL: %s, BODY: %s", NSUtility.NS_SENDER_EMAIL, servicePath, jsonData));
+            LOG.info(String.format("sender email: %s, Method: POST, URL: %s, BODY: %s", NC_SENDER_EMAIL, servicePath, jsonData));
             OAuthResponse oAuthResponse = client.doPost("gnotifier", servicePath, null, jsonData.getBytes());
             if (oAuthResponse == null) throw new SenderException("GN | oAuthResponse is null.");
             else GNUtil.checkResponse(oAuthResponse);
@@ -184,7 +183,7 @@ public class GNotifierImpl implements Sender {
 
     @Override
     public void unSubscribeUserIntoTopic(String topicName, UserToUnSubscribe userToUnSubscribe) throws SenderException {
-        GatewayClient client = new GatewayClient(NSUtility.NS_SENDER_EMAIL);
+        GatewayClient client = new GatewayClient(NC_SENDER_EMAIL);
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
         client.setEncodeQueryParams(true);
@@ -192,7 +191,7 @@ public class GNotifierImpl implements Sender {
             String servicePath = String.format("/topics/%s/users/%s", topicName, userToUnSubscribe.getUserId());
             Map<String, String> queryParams = new HashMap<>();
             queryParams.put("application_id", Long.toString(userToUnSubscribe.getApplicationId()));
-            LOG.info(String.format("Method: DELETE, URL: %s, QUERY_PARAMS: %s", servicePath, queryParams));
+            LOG.info(String.format("sender email: %s, Method: DELETE, URL: %s, QUERY_PARAMS: %s", NC_SENDER_EMAIL, servicePath, queryParams));
             OAuthResponse oAuthResponse = client.doDelete("gnotifier", servicePath, queryParams);
             if (oAuthResponse == null) throw new SenderException("GN | oAuthResponse is null.");
             else GNUtil.checkResponse(oAuthResponse);

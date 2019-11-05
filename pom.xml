@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.bbva.intranet.ns</groupId>
-    <artifactId>notifier-system</artifactId>
+    <groupId>com.bbva.intranet.nc</groupId>
+    <artifactId>not-core</artifactId>
     <version>1.0.0</version>
 
     <parent>
@@ -13,7 +13,6 @@
         <artifactId>fga-back-template</artifactId>
         <version>3.0.1</version>
     </parent>
-
 
     <properties>
         <!-- Generic properties -->

@@ -1,6 +1,7 @@
 package com.bbva.intranet.senders.domain.requests.topics;
 
 public class Topic {
+
     private String name;
     private String description;
     private String sender_id;

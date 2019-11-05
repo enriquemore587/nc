@@ -22,9 +22,6 @@ public class StorageUtility {
     public static final String SERVICE_UNAVAILABLE_ERROR = "SERVICE UNAVAILABLE | NS";
     public static final String SUCCESS = "SUCCESS | NS";
 
-    public static final String LOG_STARTING = "Starting";
-    public static final String LOG_FINISHED = "Finished";
-
 
     public static String buildMsg(String msg, int statusCode, String jsonString) {
         return String.format("WS Response: [%s] - HTTP STATUS CODE: [%s] - BODY: [%s]", msg, statusCode, jsonString);
