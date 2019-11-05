@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Properties</title>
+		<link href='https://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" type="text/css" href="/fga/admin/css/admin.css"/>
+		<link rel="stylesheet" type="text/css" href="/fga/admin/css/bootstrap-classic.css"/>
+		<link rel="stylesheet" type="text/css" href="/fga/admin/css/bootstrap-responsive.css"/>
+		<link rel="stylesheet" type="text/css" href="/fga/admin/css/charisma-app.css"/>
+		<link rel="icon" type="image/png" href="/fga/admin/img/favicon.png"/>
+		<script type="text/javascript" src="/fga/admin/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="/fga/admin/js/properties.js"></script>
+	</head>
+
+	<body>
+		<div class="well">
+            <div class="box-content">
+				<div class="title2">Home &gt; App &gt; Properties</div>
+				<p>Utility for managing the properties stored in the App Engine datastore. These properties overwrite the ones existing in files</p>
+
+				<table class="table table-striped table-bordered bootstrap-datatable datatable dataTable">
+					<thead>
+						<tr>
+							<td>NAME</td>
+							<td>VALUE</td>
+							<td style="min-width:100px"></td>
+						</tr>
+					</thead>
+					<tr>
+						<td><input id="property_key" type="text" name="key" value=""/></td>
+						<td><input id="property_data" type="text" name="data" value=""/></td>
+						<td>
+							<!--<input id="create_property" type="button" name="create" value="Create"/>-->
+						 	<button id="create_property" class="btn btn-info" type="button" name="create">
+                                    <i class="icon-plus-sign icon-white"></i> Create
+                            </button>
+						</td>
+					</tr>
+				</table>
+
+				<br/>
+				<p>Editable Properties</p>
+				<table id="editable_properties" class="table table-striped table-bordered bootstrap-datatable datatable dataTable">
+					<thead>
+						<tr>
+							<td>NAME</td>
+							<td>VALUE</td>
+							<td style="min-width:200px">OPTIONS</td>
+						</tr>
+					</thead>
+
+				</table>
+
+				<br/>
+				<p>Displaying properties used in App</p>
+				<table id="all_properties" class="table table-striped table-bordered bootstrap-datatable datatable dataTable">
+					<thead>
+						<tr>
+							<td>NAME</td>
+							<td>VALUE</td>
+						</tr>
+					</thead>
+
+				</table>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Admin Tools</title>
+		<link href='https://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" type="text/css" href="/fga/admin/css/admin.css"/>
+		<link rel="stylesheet" type="text/css" href="/fga/admin/css/bootstrap-classic.css"/>
+		<link rel="stylesheet" type="text/css" href="/fga/admin/css/bootstrap-responsive.css"/>
+		<link rel="stylesheet" type="text/css" href="/fga/admin/css/charisma-app.css"/>
+		<link rel="icon" type="image/png" href="/fga/admin/img/favicon.png"/>
+	</head>
+
+	<body style="overflow-y:hidden">
+	<div id="contenedor" style="width:99.75%;height:100%;position: absolute;">
+		<div class="span2 main-menu-span" style="position:fixed;width:12%!important;margin-left:0">
+				<div class="well nav-collapse sidebar-nav">
+									<img style="" src="/fga/admin/img/appengine.gif"
+					alt="Powered by Google App Engine" />
+					<div><img alt="BBVA Admin Tools" title="BBVA Admin Tools" src="/fga/admin/img/BBVA2.png"/></div>
+					<ul class="nav nav-tabs nav-stacked main-menu" style="padding-bottom:100%">
+						<li class="nav-header hidden-tablet">App</li>
+
+						<li style="margin-left: -2px;">
+							<a class="ajax-link" target="contenido" href="/fga/admin/properties.html">
+								<span class="hidden-tablet">Properties</span>
+							</a>
+						</li>
+						<li style="margin-left: -2px;">
+							<a class="ajax-link" target="contenido" href="/fga/admin/whitelist.html">
+								<span class="hidden-tablet">Whitelist</span>
+							</a>
+						</li>
+                        <li style="margin-left: -2px;">
+                            <a class="ajax-link" target="contenido" href="/fga/admin/servicesSecurity.html">
+                                <span class="hidden-tablet">Services Security</span>
+                            </a>
+                        </li>
+						<li style="margin-left: -2px;">
+							<a class="ajax-link" target="contenido" href="/fga/admin/decryptCode.html">
+								<span class="hidden-tablet">Decrypt Code</span>
+							</a>
+						</li>
+						<li class="nav-header hidden-tablet">AppEngine</li>
+
+						<li style="margin-left: -2px;">
+							<a class="ajax-link" target="contenido" href="/fga/admin/datastore-list.html">
+								<span class="hidden-tablet">Datastore</span>
+							</a>
+						</li>
+						<!-- <li style="margin-left: -2px;">
+							<a class="ajax-link" href="/fga/admin?service=logout">
+								<span class="hidden-tablet">Logout</span>
+							</a>
+						</li>-->
+						<li style="margin-left: -2px;">
+							<a class="ajax-link" target="contenido" href="/fga/admin//tasks.html">
+								<span class="hidden-tablet">Tasks</span>
+							</a>
+						</li>
+						<li style="margin-left: -2px;">
+							<a class="ajax-link" target="contenido" href="/fga/admin/user.html">
+								<span class="hidden-tablet">User</span>
+							</a>
+						</li>
+
+						<li class="nav-header hidden-tablet">Java SE</li>
+
+						<li style="margin-left: -2px;">
+							<a class="ajax-link" target="contenido" href="/fga/admin/system_properties.html">
+								<span class="hidden-tablet">System Properties</span>
+							</a>
+						</li>
+
+						<li class="nav-header hidden-tablet">Web</li>
+
+						<li style="margin-left: -2px;">
+							<a class="ajax-link" target="contenido" href="/fga/admin/cookies.html">
+								<span class="hidden-tablet">Cookies</span>
+							</a>
+						</li>
+						<li style="margin-left: -2px;">
+							<a class="ajax-link" target="contenido" href="/fga/admin/servlet_context.html">
+								<span class="hidden-tablet">Servlet Context</span>
+							</a>
+						</li>
+						<li style="margin-left: -2px;">
+							<a class="ajax-link" target="contenido" href="/fga/admin/session.html">
+								<span class="hidden-tablet">Session</span>
+							</a>
+						</li>
+						<li style="margin-left: -2px;">
+							<a class="ajax-link" target="contenido" href="/fga/admin/context_dump.html">
+								<span class="hidden-tablet">Context Dump</span>
+							</a>
+						</li>
+						
+					</ul>
+				</div><!--/.well -->
+			</div>
+			<div id="iframediv" style="margin-left:0;width:88%;height:99.5%;float:right" class="span2 main-menu-span">
+			<iframe style="width:100%;height:100%" id="contenido" name="contenido" src="/fga/admin/properties.html"></iframe>
+			</div>
+<!--  		<%//Application specific menu
+			java.net.URL fileURL = pageContext.getServletContext().getResource("/fga/admin/appMenu.jsp");
+			if (fileURL != null) {
+<%-- 		%> --%>
+<%-- 			<%@ include  file="/fga/admin/appMenu.jsp"%> --%>
+<%-- 		<%}%> --%> -->
+</div>
+	</body>
+</html>
+

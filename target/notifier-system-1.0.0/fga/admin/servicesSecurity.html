@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Services Security</title>
+		<link href='https://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" type="text/css" href="/fga/admin/css/admin.css"/>
+		<link rel="stylesheet" type="text/css" href="/fga/admin/css/bootstrap-classic.css"/>
+		<link rel="stylesheet" type="text/css" href="/fga/admin/css/bootstrap-responsive.css"/>
+		<link rel="stylesheet" type="text/css" href="/fga/admin/css/charisma-app.css"/>
+		<link rel="icon" type="image/png" href="/fga/admin/img/favicon.png"/>
+		<script type="text/javascript" src="/fga/admin/js/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="/fga/admin/js/servicesSecurity.js"></script>
+	</head>
+
+	<body>
+		<div class="well">
+			<div class="box-content">
+				<div class="title2">Home &gt; App &gt; Services Security</div>
+				<p>Utility for managing the application services security</p>
+
+				<div id="result_data">
+					<div class="title2">Services security for application services</div>
+                    <input type="hidden" id="entityCount" name="entityCount"/>
+                    <input type="hidden" id="pageSize" name="pageSize"/>
+                    <input type="hidden" id="offset" name="offset"/>
+					<div>
+						<p id="total_entities"></p>
+					</div>
+
+                    <div id="not_entities">
+                        <p>No entities found for given Kind (ServicesSecurity)</p>
+                    </div>
+
+                    <div id="entities">
+                        <p>
+                            <a id="first_page_top" href="">First</a> |
+                            <a id="previous_page_top" href="">Previous</a> |
+                            <a id="next_page_top" href="">Next</a> |
+                            Offset <span id="offset_top"></span>
+                        </p>
+
+                        <table id="result_data_content" class="table table-striped table-bordered bootstrap-datatable datatable dataTable list">
+                        </table>
+
+                        <p>
+                            <a id="first_page_bottom" href="">First</a> |
+                            <a id="previous_page_bottom" href="">Previous</a> |
+                            <a id="next_page_bottom" href="">Next</a> |
+                            Offset <span id="offset_bottom"></span>
+                        </p>
+
+                        <div class="buttons">
+                            <button type="button" class="btn btn-info" onclick="newEntity()">
+                                <i class="icon-plus-sign icon-white"></i> New App
+                            </button>
+
+                            <button type="submit" class="btn btn-danger" name="_event_delete" onclick="deleteEntities()">
+                                <i class="icon-trash icon-white"></i> Delete App
+                            </button>
+                        </div>
+                    </div>
+				</div>
+			</div>
+        	<!-- <div id="loaderList" class="loading" style="display:none;"></div> -->
+		</div>
+	</body>
+</html>

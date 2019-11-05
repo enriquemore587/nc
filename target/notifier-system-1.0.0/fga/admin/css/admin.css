@@ -1,0 +1,28 @@
+thead td{
+	/*background: #E0E0E0;
+	*/text-align: left;
+	border-color: #333333;
+}
+
+.loading {
+    width: 100%;
+    height: 30px;
+    display: block;
+    background-image:url('../img/loading.gif');
+    background-repeat:no-repeat;
+    background-position:center center;
+    text-align: center;
+}
+.title2{
+    font-weight: bold;
+}
+.truncate{
+    white-space: pre; /* CSS 2.0 */
+    white-space: pre-wrap; /* CSS 2.1 */
+    white-space: pre-line; /* CSS 3.0 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    white-space: -moz-pre-wrap; /* Mozilla */
+    white-space: -hp-pre-wrap; /* HP */
+    word-wrap: break-word; /* IE 5+ */
+}
