@@ -69,8 +69,7 @@ public class NotCoreImpl implements NotCore {
         LOG.info(FINISHED);
     }
 
-    @Override
-    public TopicResp topicsBySenderEmail(NotCoreChannel channel, Integer pageSize, Integer paginationKey) throws NotCoreException {
+    private TopicResp topicsBySenderEmail(NotCoreChannel channel, Integer pageSize, Integer paginationKey) throws NotCoreException {
         LOG.info(STARTING);
         NotCoreUtility.verifyChannel(channel);
         TopicResp topicResp = null;

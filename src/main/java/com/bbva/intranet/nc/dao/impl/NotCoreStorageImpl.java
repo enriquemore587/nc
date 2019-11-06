@@ -40,11 +40,6 @@ public class NotCoreStorageImpl implements NotCore {
     }
 
     @Override
-    public TopicResp topicsBySenderEmail(NotCoreChannel channel, Integer pageSize, Integer paginationKey) throws NotCoreException {
-        return null;
-    }
-
-    @Override
     public void createTopic(NotCoreChannel channel, Topic topic) throws NotCoreException {
 
     }

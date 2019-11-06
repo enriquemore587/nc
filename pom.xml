@@ -7,6 +7,7 @@
     <groupId>com.bbva.intranet.nc</groupId>
     <artifactId>not-core</artifactId>
     <version>1.0.0</version>
+    <packaging>jar</packaging>
 
     <parent>
         <groupId>com.bbva</groupId>
@@ -21,12 +22,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-
         <!-- Insane Libs -->
         <utilities-version>1.2.0</utilities-version>
-
-        <!-- Spring -->
-        <spring-framework.version>3.2.16.RELEASE</spring-framework.version>
 
         <!-- Hibernate -->
         <hibernate.version>4.3.5.Final</hibernate.version>
@@ -40,6 +37,7 @@
         <!-- Logging -->
         <org.slf4j-version>1.7.7</org.slf4j-version>
         <log4j-version>1.2.17</log4j-version>
+
     </properties>
 
     <prerequisites>
@@ -63,39 +61,6 @@
             <version>2.5.3</version>
         </dependency>
         <!--End rest Client-->
-
-        <!-- Spring -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>${spring-framework.version}</version>
-            <scope>provided</scope>
-            <exclusions>
-                <!-- Exclude Commons Logging in favor of SLF4j -->
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring-framework.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${spring-framework.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>${spring-framework.version}</version>
-            <scope>provided</scope>
-        </dependency>
 
         <!-- Intranet Libs -->
         <dependency>
