@@ -64,4 +64,11 @@ public abstract class GNUtil {
         return String.format("GN | call failed, data sent:  %s , code error:  [%s] , error:  %s ", dataSent, e.getCode(), e.getMessage());
     }
 
+    public static String objectToJson(Object obj) {
+        Gson gson = (new GsonBuilder()).create();
+        String json = gson.toJson(obj);
+        LOG.info(json);
+        return json;
+    }
+
 }

@@ -11,7 +11,6 @@ import com.bbva.intranet.senders.domain.responses.TopicResp;
 import com.bbva.intranet.senders.exceptions.GNotifierException;
 import com.bbva.intranet.senders.exceptions.SenderException;
 import com.bbva.intranet.senders.utilities.GNUtil;
-import com.bbva.intranet.utilities.GsonGAEUtility;
 import com.fga.exceptions.OAuthClientException;
 import com.fga.oauth.client.GatewayClient;
 import com.fga.oauth.client.utils.OAuthResponse;
@@ -35,7 +34,7 @@ public class GNotifierImpl implements Sender {
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
         client.setEncodeQueryParams(true);
-        String jsonData = GsonGAEUtility.objectToJson(userDeviceRegister);
+        String jsonData = GNUtil.objectToJson(userDeviceRegister);
         try {
             String servicePath = "/register";
             LOG.info(String.format("sender email: %s, Method: POST, URL: %s, BODY: %s", NC_SENDER_EMAIL, servicePath, jsonData));
@@ -54,7 +53,7 @@ public class GNotifierImpl implements Sender {
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
         client.setEncodeQueryParams(true);
-        String jsonData = GsonGAEUtility.objectToJson(pushNotification);
+        String jsonData = GNUtil.objectToJson(pushNotification);
         try {
             String servicePath = "/notifications";
             LOG.info(String.format("sender email: %s, Method: POST, URL: %s, BODY: %s", NC_SENDER_EMAIL, servicePath, jsonData));
@@ -111,7 +110,7 @@ public class GNotifierImpl implements Sender {
         client.getHeaders().setContentType("application/json; charset=UTF-8");
         client.setEncodeQueryParams(true);
         topic.setSender_id(NC_SENDER_ID);
-        String jsonData = GsonGAEUtility.objectToJson(topic);
+        String jsonData = GNUtil.objectToJson(topic);
         try {
             String servicePath = "/topics";
             LOG.info(String.format("sender email: %s, Method: POST, URL: %s, BODY: %s", NC_SENDER_EMAIL, servicePath, jsonData));
@@ -149,7 +148,7 @@ public class GNotifierImpl implements Sender {
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
         client.setEncodeQueryParams(true);
-        String jsonData = GsonGAEUtility.objectToJson(topic);
+        String jsonData = GNUtil.objectToJson(topic);
         try {
             String servicePath = String.format("/topics/%s", topicName);
             LOG.info(String.format("sender email: %s, Method: PUT, URL: %s, BODY: [%s]", NC_SENDER_EMAIL, servicePath, jsonData));
@@ -168,7 +167,7 @@ public class GNotifierImpl implements Sender {
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
         client.setEncodeQueryParams(true);
-        String jsonData = GsonGAEUtility.objectToJson(userToSubscribe);
+        String jsonData = GNUtil.objectToJson(userToSubscribe);
         try {
             String servicePath = String.format("/topics/%s/users", topicName);
             LOG.info(String.format("sender email: %s, Method: POST, URL: %s, BODY: %s", NC_SENDER_EMAIL, servicePath, jsonData));
