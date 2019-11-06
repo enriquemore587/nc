@@ -1,6 +1,5 @@
 package com.bbva.intranet.senders.utilities;
 
-import com.bbva.intranet.data.exceptions.GAEAuthorizationException;
 import com.bbva.intranet.senders.exceptions.SenderException;
 import com.fga.exceptions.OAuthClientException;
 import com.fga.oauth.client.utils.OAuthResponse;

@@ -70,14 +70,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Data Exceptions -->
-        <dependency>
-            <groupId>com.bbva.intranet.data.exceptions</groupId>
-            <artifactId>data-exceptions</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-
         <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
