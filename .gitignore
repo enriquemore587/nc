@@ -1,3 +1,5 @@
 ./idea
 target/
 not-core.iml
+owner.iml
+*.iml
