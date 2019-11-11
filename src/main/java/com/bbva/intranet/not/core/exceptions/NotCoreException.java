@@ -1,4 +1,4 @@
-package com.bbva.intranet.nc.exceptions;
+package com.bbva.intranet.not.core.exceptions;
 
 public class NotCoreException extends Exception {
 

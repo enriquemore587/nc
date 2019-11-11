@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.bbva.intranet.nc</groupId>
+    <groupId>com.bbva.intranet.not.core</groupId>
     <artifactId>not-core</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
@@ -21,6 +21,9 @@
         <maven-compiler-version>3.3</maven-compiler-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- Hibernate -->
+        <hibernate.version>4.3.5.Final</hibernate.version>
 
         <!-- Logging -->
         <org.slf4j-version>1.7.7</org.slf4j-version>
@@ -49,6 +52,14 @@
             <version>2.5.3</version>
         </dependency>
         <!--End rest Client-->
+
+        <!-- Hibernate -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- Logging -->
         <dependency>

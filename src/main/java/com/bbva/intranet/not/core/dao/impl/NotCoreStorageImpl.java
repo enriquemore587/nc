@@ -1,14 +1,13 @@
-package com.bbva.intranet.nc.dao.impl;
+package com.bbva.intranet.not.core.dao.impl;
 
-import com.bbva.intranet.nc.dao.NotCore;
-import com.bbva.intranet.nc.exceptions.NotCoreException;
-import com.bbva.intranet.nc.utilities.NotCoreChannel;
+import com.bbva.intranet.not.core.dao.NotCore;
+import com.bbva.intranet.not.core.exceptions.NotCoreException;
+import com.bbva.intranet.not.core.utilities.NotCoreChannel;
 import com.bbva.intranet.senders.domain.requests.UserToSubscribe;
 import com.bbva.intranet.senders.domain.requests.UserToUnSubscribe;
 import com.bbva.intranet.senders.domain.requests.notifications.PushNotification;
 import com.bbva.intranet.senders.domain.requests.register.UserDeviceRegister;
 import com.bbva.intranet.senders.domain.requests.topics.Topic;
-import com.bbva.intranet.senders.domain.responses.TopicResp;
 import com.bbva.intranet.storage.domain.dao.StorageManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

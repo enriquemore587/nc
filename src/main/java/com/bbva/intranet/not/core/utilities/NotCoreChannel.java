@@ -1,4 +1,4 @@
-package com.bbva.intranet.nc.utilities;
+package com.bbva.intranet.not.core.utilities;
 
 public enum NotCoreChannel {
 

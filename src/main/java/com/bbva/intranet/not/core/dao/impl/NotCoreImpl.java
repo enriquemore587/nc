@@ -1,9 +1,9 @@
-package com.bbva.intranet.nc.dao.impl;
+package com.bbva.intranet.not.core.dao.impl;
 
-import com.bbva.intranet.nc.dao.NotCore;
-import com.bbva.intranet.nc.exceptions.NotCoreException;
-import com.bbva.intranet.nc.utilities.NotCoreChannel;
-import com.bbva.intranet.nc.utilities.NotCoreUtility;
+import com.bbva.intranet.not.core.dao.NotCore;
+import com.bbva.intranet.not.core.exceptions.NotCoreException;
+import com.bbva.intranet.not.core.utilities.NotCoreChannel;
+import com.bbva.intranet.not.core.utilities.NotCoreUtility;
 import com.bbva.intranet.senders.domain.dao.Sender;
 import com.bbva.intranet.senders.domain.requests.UserToSubscribe;
 import com.bbva.intranet.senders.domain.requests.UserToUnSubscribe;
@@ -17,8 +17,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
-import static com.bbva.intranet.nc.utilities.NotCoreUtility.FINISHED;
-import static com.bbva.intranet.nc.utilities.NotCoreUtility.STARTING;
+import static com.bbva.intranet.not.core.utilities.NotCoreUtility.FINISHED;
+import static com.bbva.intranet.not.core.utilities.NotCoreUtility.STARTING;
 
 public class NotCoreImpl implements NotCore {
 
