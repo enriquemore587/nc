@@ -1,3 +1,7 @@
 ./idea
 target/
 not-core.iml
+.classpath
+.factorypath
+.project
+.settings/
