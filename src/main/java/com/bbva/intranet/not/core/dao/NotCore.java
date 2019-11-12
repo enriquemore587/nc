@@ -1,7 +1,7 @@
-package com.bbva.intranet.nc.dao;
+package com.bbva.intranet.not.core.dao;
 
-import com.bbva.intranet.nc.exceptions.NotCoreException;
-import com.bbva.intranet.nc.utilities.NotCoreChannel;
+import com.bbva.intranet.not.core.exceptions.NotCoreException;
+import com.bbva.intranet.not.core.utilities.NotCoreChannel;
 import com.bbva.intranet.senders.domain.requests.UserToSubscribe;
 import com.bbva.intranet.senders.domain.requests.UserToUnSubscribe;
 import com.bbva.intranet.senders.domain.requests.notifications.PushNotification;

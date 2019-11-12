@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static com.bbva.intranet.nc.utilities.NotCoreUtility.NC_SENDER_EMAIL;
-import static com.bbva.intranet.nc.utilities.NotCoreUtility.NC_SENDER_ID;
+import static com.bbva.intranet.not.core.utilities.NotCoreUtility.NC_SENDER_EMAIL;
+import static com.bbva.intranet.not.core.utilities.NotCoreUtility.NC_SENDER_ID;
 
 public class GNotifierImpl implements Sender {
 

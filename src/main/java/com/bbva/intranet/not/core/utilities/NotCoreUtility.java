@@ -1,7 +1,7 @@
-package com.bbva.intranet.nc.utilities;
+package com.bbva.intranet.not.core.utilities;
 
-import com.bbva.intranet.nc.exceptions.NotCoreException;
 import com.bbva.intranet.senders.domain.requests.register.ApplicationToUserToRegister;
+import com.bbva.intranet.not.core.exceptions.NotCoreException;
 import com.fga.utils.PropertiesUtil;
 
 public abstract class NotCoreUtility {
