@@ -1,5 +1,8 @@
 ./idea
 target/
 not-core.iml
-owner.iml
+.classpath
+.factorypath
+.project
+.settings/
 *.iml
