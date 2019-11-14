@@ -22,7 +22,7 @@ import static com.bbva.intranet.not.core.utilities.NotCoreUtility.STARTING;
 
 public class NotCoreImpl implements NotCore {
 
-    public static Logger LOG = LoggerFactory.getLogger(NotCoreImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NotCoreImpl.class);
 
     private Sender gnSender;
 

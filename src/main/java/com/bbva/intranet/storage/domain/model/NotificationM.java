@@ -1,4 +1,4 @@
-package com.bbva.intranet.not.core.domain.model;
+package com.bbva.intranet.storage.domain.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

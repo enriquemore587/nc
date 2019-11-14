@@ -1,29 +1,19 @@
-package com.bbva.intranet.not.core.domain.model;
+package com.bbva.intranet.storage.domain.requests;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+public class UserReq {
 
-@Entity
-@Table(name = "nc_users")
-public class UserM {
-
-    @Id
-    @GeneratedValue
     private Long id;
     private String email;
 
-    public UserM() {
+    public UserReq() {
     }
 
-    public UserM(String email) {
-
+    public UserReq(Long id, String email) {
+        this.id = id;
         this.email = email;
     }
 
     public Long getId() {
-
         return id;
     }
 
@@ -37,5 +27,13 @@ public class UserM {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "UserReq{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

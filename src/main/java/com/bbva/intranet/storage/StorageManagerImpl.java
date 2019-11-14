@@ -1,6 +1,5 @@
-package com.bbva.intranet.storage.domain.dao.impl;
+package com.bbva.intranet.storage;
 
-import com.bbva.intranet.storage.domain.dao.StorageManager;
 import com.bbva.intranet.storage.exceptions.StorageException;
 import com.bbva.intranet.storage.utilities.StorageUtility;
 import com.google.gson.Gson;
@@ -18,11 +17,10 @@ import java.io.IOException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class StorageManagerImpl implements StorageManager {
+public abstract class StorageManagerImpl {
 
-    public static Logger LOG = LoggerFactory.getLogger(StorageManagerImpl.class);
+    private static Logger LOG = LoggerFactory.getLogger(StorageManagerImpl.class);
 
-    @Override
     public void saveDevice(Object obj) throws StorageException {
         HttpClient httpClient = new DefaultHttpClient();
         try {
@@ -49,8 +47,4 @@ public class StorageManagerImpl implements StorageManager {
         }
     }
 
-    @Override
-    public void saveNotification() {
-
-    }
 }

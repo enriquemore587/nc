@@ -28,4 +28,7 @@ public class NotCoreException extends Exception {
         this.code = code;
     }
 
+    public static class TransactionStoppedException {
+    }
+
 }
