@@ -57,29 +57,39 @@ public class NotCoreStorageImpl implements NotCore {
     public void register(NotCoreChannel channel, UserDeviceRegister deviceRegister) throws NotCoreException {
         NotCoreUtility.verifyChannel(channel);
         try {
+            this.notCoreUserDAO.findByEmail(deviceRegister.getUserId());
+            throw new NotCoreException(String.format("%s is already exist", deviceRegister.getUserId()));
+        } catch (NoRecordFoundException userNotExistException) {
             try {
-                notCoreUserDAO.save(new UserM(deviceRegister.getUserId()));
+                LOG.info(String.format("%s is not exist then will be store"));
+                UserM userM = new UserM(deviceRegister.getUserId());
+                notCoreUserDAO.save(userM);
+                try {
+                    //TODO: Hace falta validar que el dispositivo no exista ya.
+                    DeviceM deviceM = new DeviceM();
+                        deviceM.setBrand(deviceRegister.getDevice().getBrand());
+                        deviceM.setDeviceId(deviceRegister.getDevice().getId());
+                        deviceM.setLanguage(deviceRegister.getDevice().getLanguage());
+                        deviceM.setModel(deviceRegister.getDevice().getModel());
+                        deviceM.setOs(deviceRegister.getDevice().getOs());
+                        deviceM.setOsVersion(deviceRegister.getDevice().getOsVersion());
+                        deviceM.setToken(deviceRegister.getToken());
+                        deviceM.setUserId(deviceRegister.getUserId());
+                    LOG.info(String.format("The device with id %s will be saved for the user id %s", deviceM.getDeviceId(), deviceM.getUserId()));
+                    notCoreDeviceDAO.save(deviceM);
+                    LOG.info("GN will be call");
+                    gnSender.register(deviceRegister);
+                } catch (TransactionStoppedException e) {
+                    throw new NotCoreException("Couldn't save device");
+                } catch (SenderException e) {
+                    throw new NotCoreException(e.getMessage());
+                }
             } catch (TransactionStoppedException e) {
                 LOG.error(e.getMessage());
-                throw new NotCoreException("Couldn't save new user.");
+                throw new NotCoreException("Couldn't store user");
             }
-            DeviceM deviceM = new DeviceM();
-                deviceM.setBrand(deviceRegister.getDevice().getBrand());
-                deviceM.setDeviceId(deviceRegister.getDevice().getId());
-                deviceM.setLanguage(deviceRegister.getDevice().getLanguage());
-                deviceM.setModel(deviceRegister.getDevice().getModel());
-                deviceM.setOs(deviceRegister.getDevice().getOs());
-                deviceM.setOsVersion(deviceRegister.getDevice().getOsVersion());
-                deviceM.setToken(deviceRegister.getToken());
-                deviceM.setUserId(deviceRegister.getUserId());
-            notCoreDeviceDAO.save(deviceM);
-            gnSender.register(deviceRegister);
         } catch (TransactionStoppedException e) {
-            LOG.error(e.getMessage());
-            throw new NotCoreException("Couldn't save new device");
-        } catch (SenderException e) {
-            LOG.error(e.getMessage());
-            throw new NotCoreException("No was send notification.");
+            throw new NotCoreException(e.getMessage());
         }
     }
 
@@ -94,25 +104,24 @@ public class NotCoreStorageImpl implements NotCore {
             try {
                 userM = this.notCoreUserDAO.findByEmail(pushNotification.getUserId());
             } catch (NoRecordFoundException e) {
-                LOG.error(e.getMessage());
                 throw new NotCoreException(String.format("User with id «%s» not found ", pushNotification.getUserId()));
             }
         } catch (NoRecordFoundException e) {
-            LOG.error(e.getMessage());
-            throw new NotCoreException(e.getMessage());
+            throw new NotCoreException(String.format("Notification with template id «%s» not found ", templateId));
         } catch (TransactionStoppedException e) {
-            LOG.error(e.getMessage());
-            throw new NotCoreException(UNCONTROLLED_ERROR_MESSAGE);
+            throw new NotCoreException(e.getMessage());
         }
         try {
             NotificationSentM notificationSentM = new NotificationSentM();
-            notificationSentM.setNotificationId(notificationM.getId());
-            notificationSentM.setRead(false);
-            notificationSentM.setUserId(userM.getId());
+                notificationSentM.setNotificationId(notificationM.getId());
+                notificationSentM.setRead(false);
+                notificationSentM.setUserId(userM.getId());
             this.gnSender.sendNotification(pushNotification);
             this.notCoreNotificationSentDAO.save(notificationSentM);
-        } catch (TransactionStoppedException | SenderException e) {
+        } catch (SenderException e) {
             throw new NotCoreException(e.getMessage());
+        } catch (TransactionStoppedException e) {
+            throw new NotCoreException(String.format("The notification couldn't stored but were sent successfully"));
         }
     }
 
@@ -198,6 +207,20 @@ public class NotCoreStorageImpl implements NotCore {
     @Override
     public void updateTopic(NotCoreChannel channel, String topicName, Topic topic) throws NotCoreException {
         NotCoreUtility.verifyChannel(channel);
+        try {
+            TopicM topicM = this.notCoreTopicDAO.findByName(topicName);
+            topicM.setName(topic.getName());
+            topicM.setDescription(topic.getDescription());
+            try {
+                this.notCoreTopicDAO.update(topicM);
+            } catch (TransactionStoppedException e) {
+                throw new NotCoreException(String.format("«%s» couldn't store", topicName));
+            }
+        } catch (NoRecordFoundException e) {
+            throw new NotCoreException(String.format("«%s» topic doesn't exist", topicName));
+        } catch (TransactionStoppedException e) {
+            throw new NotCoreException(e.getMessage());
+        }
     }
 
     @Override

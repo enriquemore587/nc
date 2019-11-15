@@ -22,6 +22,7 @@ import static com.bbva.intranet.not.core.utilities.NotCoreUtility.FINISHED;
 import static com.bbva.intranet.not.core.utilities.NotCoreUtility.STARTING;
 import static com.bbva.intranet.not.core.utilities.NotCoreUtility.RECORD_NO_FOUND_MESSAGE;
 import static com.bbva.intranet.not.core.utilities.NotCoreUtility.TRANSACTION_STOPPED_MESSAGE;
+import static com.bbva.intranet.not.core.utilities.NotCoreUtility.UNCONTROLLED_ERROR_MESSAGE;
 
 public class NotCoreNotificationSentDAOImpl implements NotCoreNotificationSentDAO {
 
@@ -47,7 +48,7 @@ public class NotCoreNotificationSentDAOImpl implements NotCoreNotificationSentDA
             if (notifications == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
-            throw new TransactionStoppedException(TRANSACTION_STOPPED_MESSAGE);
+            throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
@@ -70,7 +71,7 @@ public class NotCoreNotificationSentDAOImpl implements NotCoreNotificationSentDA
             if (notificationSent == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
-            throw new TransactionStoppedException(TRANSACTION_STOPPED_MESSAGE);
+            throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
@@ -93,7 +94,7 @@ public class NotCoreNotificationSentDAOImpl implements NotCoreNotificationSentDA
             if (notifications == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
-            throw new TransactionStoppedException(TRANSACTION_STOPPED_MESSAGE);
+            throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
@@ -119,7 +120,7 @@ public class NotCoreNotificationSentDAOImpl implements NotCoreNotificationSentDA
             if (notifications == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
-            throw new TransactionStoppedException(TRANSACTION_STOPPED_MESSAGE);
+            throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
@@ -146,7 +147,7 @@ public class NotCoreNotificationSentDAOImpl implements NotCoreNotificationSentDA
             if (notifications == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
-            throw new TransactionStoppedException(TRANSACTION_STOPPED_MESSAGE);
+            throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
@@ -169,7 +170,7 @@ public class NotCoreNotificationSentDAOImpl implements NotCoreNotificationSentDA
             if (notifications == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
-            throw new TransactionStoppedException(TRANSACTION_STOPPED_MESSAGE);
+            throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
