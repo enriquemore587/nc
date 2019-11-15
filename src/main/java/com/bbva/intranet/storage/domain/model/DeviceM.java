@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 
 @Entity
 @Table(name="nc_devices")
@@ -23,13 +24,14 @@ public class DeviceM {
     private String language;
     private String token;
     @Column(name = "user_id")
-    private String userId;
+    private Long userId;
+    private Date createAt;
+    private Date updateAt;
 
     public DeviceM() {
     }
 
-    public DeviceM(String deviceId, String brand, String model, String os, String osVersion, String language, String token, String userId) {
-
+    public DeviceM(String deviceId, String brand, String model, String os, String osVersion, String language, String token, Long userId, Date createAt, Date updateAt) {
         this.deviceId = deviceId;
         this.brand = brand;
         this.model = model;
@@ -38,6 +40,8 @@ public class DeviceM {
         this.language = language;
         this.token = token;
         this.userId = userId;
+        this.createAt = createAt;
+        this.updateAt = updateAt;
     }
 
     public Long getId() {
@@ -105,11 +109,27 @@ public class DeviceM {
         this.token = token;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Date getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
+    }
+
+    public Date getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(Date updateAt) {
+        this.updateAt = updateAt;
     }
 }

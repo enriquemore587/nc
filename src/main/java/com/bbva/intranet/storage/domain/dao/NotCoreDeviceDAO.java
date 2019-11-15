@@ -8,7 +8,8 @@ import java.util.List;
 
 public interface NotCoreDeviceDAO {
 
-    List<DeviceM> findBy(String userId) throws NoRecordFoundException, TransactionStoppedException;
+    List<DeviceM> findBy(Long userId) throws NoRecordFoundException, TransactionStoppedException;
+    DeviceM findBy(Long userId, String deviceId) throws NoRecordFoundException, TransactionStoppedException;
     DeviceM findById(Long id) throws NoRecordFoundException, TransactionStoppedException;
     void save(DeviceM deviceM) throws TransactionStoppedException;
     void update(DeviceM deviceM) throws TransactionStoppedException;

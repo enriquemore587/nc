@@ -7,31 +7,27 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "nc_notifications_sent")
-public class NotificationSentM {
+@Table(name = "nc_user_topic")
+public class UserTopicM {
 
     @Id
     @GeneratedValue
     private Long id;
     @Column(name = "user_id")
     private Long userId;
+    @Column(name = "topic_id")
     private Long topicId;
-    @Column(name = "notification_id")
-    private Long notificationId;
-    private boolean read;
 
-    public NotificationSentM() {
+    public UserTopicM() {
     }
 
-    public NotificationSentM(Long userId, Long topicId, Long notificationId, boolean read) {
+    public UserTopicM(Long userId, Long topicId) {
+
         this.userId = userId;
         this.topicId = topicId;
-        this.notificationId = notificationId;
-        this.read = read;
     }
 
     public Long getId() {
-
         return id;
     }
 
@@ -45,22 +41,6 @@ public class NotificationSentM {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public Long getNotificationId() {
-        return notificationId;
-    }
-
-    public void setNotificationId(Long notificationId) {
-        this.notificationId = notificationId;
-    }
-
-    public boolean isRead() {
-        return read;
-    }
-
-    public void setRead(boolean read) {
-        this.read = read;
     }
 
     public Long getTopicId() {

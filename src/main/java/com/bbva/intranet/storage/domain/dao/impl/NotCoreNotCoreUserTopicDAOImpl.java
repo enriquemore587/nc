@@ -1,10 +1,11 @@
 package com.bbva.intranet.storage.domain.dao.impl;
 
-import com.bbva.intranet.not.core.utilities.NotCoreUtility;
-import com.bbva.intranet.storage.domain.dao.NotCoreDeviceDAO;
-import com.bbva.intranet.storage.domain.model.DeviceM;
 import com.bbva.intranet.not.core.exceptions.NoRecordFoundException;
 import com.bbva.intranet.not.core.exceptions.TransactionStoppedException;
+import com.bbva.intranet.not.core.utilities.NotCoreUtility;
+import com.bbva.intranet.storage.domain.dao.NotCoreUserTopicDAO;
+import com.bbva.intranet.storage.domain.model.UserTopicM;
+import javassist.NotFoundException;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -18,35 +19,35 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static com.bbva.intranet.not.core.utilities.NotCoreUtility.RECORD_NO_FOUND_MESSAGE;
+import static com.bbva.intranet.not.core.utilities.NotCoreUtility.UNCONTROLLED_ERROR_MESSAGE;
+import static com.bbva.intranet.not.core.utilities.NotCoreUtility.TRANSACTION_STOPPED_MESSAGE;
 import static com.bbva.intranet.not.core.utilities.NotCoreUtility.STARTING;
 import static com.bbva.intranet.not.core.utilities.NotCoreUtility.FINISHED;
-import static com.bbva.intranet.not.core.utilities.NotCoreUtility.RECORD_NO_FOUND_MESSAGE;
-import static com.bbva.intranet.not.core.utilities.NotCoreUtility.TRANSACTION_STOPPED_MESSAGE;
-import static com.bbva.intranet.not.core.utilities.NotCoreUtility.UNCONTROLLED_ERROR_MESSAGE;
 
-public class NotCoreDeviceDAOImpl implements NotCoreDeviceDAO {
+public class NotCoreNotCoreUserTopicDAOImpl implements NotCoreUserTopicDAO {
 
     private static final Logger LOG = LoggerFactory.getLogger(NotCoreDeviceDAOImpl.class);
 
     private SessionFactory sessionFactory;
 
-    public NotCoreDeviceDAOImpl(SessionFactory sessionFactory) {
+    public NotCoreNotCoreUserTopicDAOImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public List<DeviceM> findBy(Long userId) throws NoRecordFoundException, TransactionStoppedException {
+    public List<UserTopicM> findByTopicId(Long topicId) throws NotFoundException, TransactionStoppedException {
         LOG.info(STARTING);
-        List<DeviceM> devices = null;
+        List<UserTopicM> userTopicMS = null;
         Session session = null;
         try {
             session = sessionFactory.openSession();
             NotCoreUtility.enableEmojis(session);
-            Criteria criteria = session.createCriteria(DeviceM.class)
-                    .add(Restrictions.eq("userId", userId))
+            Criteria criteria = session.createCriteria(UserTopicM.class)
+                    .add(Restrictions.eq("topicId", topicId))
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-            devices = (List<DeviceM>) criteria.list();
-            if (devices == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
+            userTopicMS = (List<UserTopicM>) criteria.list();
+            if (userTopicMS == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
@@ -54,27 +55,50 @@ public class NotCoreDeviceDAOImpl implements NotCoreDeviceDAO {
             if (session != null) session.close();
         }
         LOG.info(FINISHED);
-        return devices;
+        return userTopicMS;
     }
 
     @Override
-    public DeviceM findBy(Long userId, String deviceId) throws NoRecordFoundException, TransactionStoppedException {
+    public List<UserTopicM> findByUserId(Long userId) throws NotFoundException, TransactionStoppedException {
         LOG.info(STARTING);
-        DeviceM deviceM = null;
+        List<UserTopicM> userTopicMS = null;
         Session session = null;
         try {
             session = sessionFactory.openSession();
             NotCoreUtility.enableEmojis(session);
-            Criteria criteria = session.createCriteria(DeviceM.class)
+            Criteria criteria = session.createCriteria(UserTopicM.class)
+                    .add(Restrictions.eq("userId", userId))
+                    .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+            userTopicMS = (List<UserTopicM>) criteria.list();
+            if (userTopicMS == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+            throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
+        } finally {
+            if (session != null) session.close();
+        }
+        LOG.info(FINISHED);
+        return userTopicMS;
+    }
+
+    @Override
+    public UserTopicM findBy(Long userId, Long topicId) throws NotFoundException, TransactionStoppedException {
+        LOG.info(STARTING);
+        UserTopicM userTopicM = null;
+        Session session = null;
+        try {
+            session = sessionFactory.openSession();
+            NotCoreUtility.enableEmojis(session);
+            Criteria criteria = session.createCriteria(UserTopicM.class)
                     .add(
                             Restrictions.and(
                                 Restrictions.eq("userId", userId),
-                                Restrictions.eq("deviceId", deviceId)
+                                Restrictions.eq("topicId", topicId)
                             )
                     )
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-            deviceM = (DeviceM) criteria.uniqueResult();
-            if (deviceM == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
+            userTopicM = (UserTopicM) criteria.uniqueResult();
+            if (userTopicM == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
@@ -82,34 +106,11 @@ public class NotCoreDeviceDAOImpl implements NotCoreDeviceDAO {
             if (session != null) session.close();
         }
         LOG.info(FINISHED);
-        return deviceM;
+        return userTopicM;
     }
 
     @Override
-    public DeviceM findById(Long id) throws NoRecordFoundException, TransactionStoppedException {
-        LOG.info(STARTING);
-        DeviceM device = null;
-        Session session = null;
-        try {
-            session = sessionFactory.openSession();
-            NotCoreUtility.enableEmojis(session);
-            Criteria criteria = session.createCriteria(DeviceM.class)
-                    .add(Restrictions.eq("id", id))
-                    .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-            device = (DeviceM) criteria.uniqueResult();
-            if (device == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
-        } catch (Exception e) {
-            LOG.error(e.getMessage());
-            throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
-        } finally {
-            if (session != null) session.close();
-        }
-        LOG.info(FINISHED);
-        return device;
-    }
-
-    @Override
-    public void save(DeviceM deviceM) throws TransactionStoppedException {
+    public void save(UserTopicM userTopicM) throws TransactionStoppedException {
         LOG.info(STARTING);
         Lock lock = new ReentrantLock();
         lock.lock();
@@ -117,23 +118,23 @@ public class NotCoreDeviceDAOImpl implements NotCoreDeviceDAO {
         Transaction tx = null;
         try {
             session = sessionFactory.openSession();
-            NotCoreUtility.enableEmojis(session);
             tx = session.beginTransaction();
-            session.save(deviceM);
+            NotCoreUtility.enableEmojis(session);
+            session.save(userTopicM);
             tx.commit();
         } catch (Exception e) {
             if (tx != null) tx.rollback();
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(TRANSACTION_STOPPED_MESSAGE);
         } finally {
-            if (session != null) session.close();
+            session.close();
             lock.unlock();
         }
         LOG.info(FINISHED);
     }
 
     @Override
-    public void update(DeviceM deviceM) throws TransactionStoppedException {
+    public void update(UserTopicM userTopicM) throws TransactionStoppedException {
         LOG.info(STARTING);
         Lock lock = new ReentrantLock();
         lock.lock();
@@ -141,23 +142,23 @@ public class NotCoreDeviceDAOImpl implements NotCoreDeviceDAO {
         Transaction tx = null;
         try {
             session = sessionFactory.openSession();
-            NotCoreUtility.enableEmojis(session);
             tx = session.beginTransaction();
-            session.update(deviceM);
+            NotCoreUtility.enableEmojis(session);
+            session.update(userTopicM);
             tx.commit();
         } catch (Exception e) {
             if (tx != null) tx.rollback();
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(TRANSACTION_STOPPED_MESSAGE);
         } finally {
-            if (session != null) session.close();
+            session.close();
             lock.unlock();
         }
         LOG.info(FINISHED);
     }
 
     @Override
-    public void delete(DeviceM deviceM) throws TransactionStoppedException {
+    public void delete(UserTopicM userTopicM) throws TransactionStoppedException {
         LOG.info(STARTING);
         Lock lock = new ReentrantLock();
         lock.lock();
@@ -165,16 +166,16 @@ public class NotCoreDeviceDAOImpl implements NotCoreDeviceDAO {
         Transaction tx = null;
         try {
             session = sessionFactory.openSession();
-            NotCoreUtility.enableEmojis(session);
             tx = session.beginTransaction();
-            session.delete(deviceM);
+            NotCoreUtility.enableEmojis(session);
+            session.delete(userTopicM);
             tx.commit();
         } catch (Exception e) {
             if (tx != null) tx.rollback();
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(TRANSACTION_STOPPED_MESSAGE);
         } finally {
-            if (session != null) session.close();
+            session.close();
             lock.unlock();
         }
         LOG.info(FINISHED);
