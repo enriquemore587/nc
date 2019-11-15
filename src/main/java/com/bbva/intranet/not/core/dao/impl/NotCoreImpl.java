@@ -46,11 +46,11 @@ public class NotCoreImpl implements NotCore {
     }
 
     @Override
-    public void sendNotification(NotCoreChannel channel, PushNotification notification) throws NotCoreException {
+    public void sendNotification(NotCoreChannel channel, PushNotification pushNotification) throws NotCoreException {
         LOG.info(STARTING);
         NotCoreUtility.verifyChannel(channel);
         try {
-            gnSender.sendNotification(notification);
+            gnSender.sendNotification(pushNotification);
         } catch (SenderException e) {
             throw new NotCoreException(e.getMessage());
         }

@@ -17,7 +17,6 @@ public class Template {
     }
 
     public Long getId() {
-
         return id;
     }
 

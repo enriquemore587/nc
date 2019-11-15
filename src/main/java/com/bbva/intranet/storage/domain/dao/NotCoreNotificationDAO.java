@@ -10,6 +10,7 @@ public interface NotCoreNotificationDAO {
 
     List<NotificationM> findAll() throws NoRecordFoundException, TransactionStoppedException;
     NotificationM findById(Long id) throws NoRecordFoundException, TransactionStoppedException;
+    NotificationM findBy(Long templateId) throws NoRecordFoundException, TransactionStoppedException;
     void save(NotificationM notificationM) throws TransactionStoppedException;
     void update(NotificationM notificationM) throws TransactionStoppedException;
     void delete(NotificationM notificationM) throws TransactionStoppedException;

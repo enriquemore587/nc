@@ -14,7 +14,7 @@ public interface NotCore {
 
     void register(NotCoreChannel channel, UserDeviceRegister deviceRegister) throws NotCoreException;
     
-    void sendNotification(NotCoreChannel channel, PushNotification notification) throws NotCoreException;
+    void sendNotification(NotCoreChannel channel, PushNotification pushNotification) throws NotCoreException;
     
     void multiSendNotification(NotCoreChannel channel, Set<PushNotification> notifications) throws NotCoreException;
     

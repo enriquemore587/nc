@@ -80,6 +80,30 @@ public class NotCoreNotificationDAOImpl implements NotCoreNotificationDAO {
     }
 
     @Override
+    public NotificationM findBy(Long templateId) throws NoRecordFoundException, TransactionStoppedException {
+
+        LOG.info(STARTING);
+        NotificationM notification = null;
+        Session session = null;
+        try {
+            session = sessionFactory.openSession();
+            NotCoreUtility.enableEmojis(session);
+            Criteria criteria = session.createCriteria(NotificationM.class)
+                    .add(Restrictions.eq("templateId", templateId))
+                    .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+            notification = (NotificationM) criteria.uniqueResult();
+            if (notification == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+            throw new TransactionStoppedException(TRANSACTION_STOPPED_MESSAGE);
+        } finally {
+            if (session != null) session.close();
+        }
+        LOG.info(FINISHED);
+        return notification;
+    }
+
+    @Override
     public void save(NotificationM notificationM) throws TransactionStoppedException {
         LOG.info(STARTING);
         Lock lock = new ReentrantLock();

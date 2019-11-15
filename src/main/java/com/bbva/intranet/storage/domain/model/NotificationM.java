@@ -14,6 +14,8 @@ public class NotificationM {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(name = "template_id")
+    private Long templateId;
     private String title;
     private String body;
     @Column(name = "day_to_notify")
@@ -22,16 +24,11 @@ public class NotificationM {
     public NotificationM() {
     }
 
-    public NotificationM(String title, String body, Date dayToNotify) {
-
+    public NotificationM(Long templateId, String title, String body, Date dayToNotify) {
+        this.templateId = templateId;
         this.title = title;
         this.body = body;
         this.dayToNotify = dayToNotify;
-    }
-
-    public Long getId() {
-
-        return id;
     }
 
     public void setId(Long id) {
@@ -60,5 +57,17 @@ public class NotificationM {
 
     public void setDayToNotify(Date dayToNotify) {
         this.dayToNotify = dayToNotify;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Long getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(Long templateId) {
+        this.templateId = templateId;
     }
 }

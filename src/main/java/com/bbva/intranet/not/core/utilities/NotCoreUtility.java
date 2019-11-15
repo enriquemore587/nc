@@ -23,7 +23,8 @@ public abstract class NotCoreUtility {
     public final static String STARTING = "Starting";
     public final static String FINISHED = "Finished";
     public static final String RECORD_NO_FOUND_MESSAGE = "No record found. ";
-    public static final String TRANSACTION_STOPPED_MESSAGE = "Request stopped. ";
+    public static final String TRANSACTION_STOPPED_MESSAGE = "Transaction stopped. ";
+    public static final String UNCONTROLLED_ERROR_MESSAGE = "Uncontrolled error. ";
 
     // TODO: This method will be removed to next versions when FMC is enable.
     public static void verifyChannel(NotCoreChannel channel) throws NotCoreException {
