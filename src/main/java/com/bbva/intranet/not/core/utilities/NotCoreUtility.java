@@ -1,5 +1,6 @@
 package com.bbva.intranet.not.core.utilities;
 
+import com.bbva.intranet.senders.domain.requests.notifications.ApplicationPN;
 import com.bbva.intranet.senders.domain.requests.register.ApplicationToUserToRegister;
 import com.bbva.intranet.not.core.exceptions.NotCoreException;
 import com.fga.utils.PropertiesUtil;
@@ -16,9 +17,10 @@ public abstract class NotCoreUtility {
     public final static String NC_APP_KEY = PropertiesUtil.getString("ns.appKey");
     public final static String NC_SENDER_EMAIL = PropertiesUtil.getString("ns.sender.email");
     public final static String NC_SENDER_ID = PropertiesUtil.getString("ns.sender.id");
-    public final static String NC_APPLICATION_ID = PropertiesUtil.getString("ns.id.application");
+    public final static Long NC_APPLICATION_ID = Long.parseLong(PropertiesUtil.getString("ns.id.application"));
     public final static String NC_NAME = PropertiesUtil.getString("ns.name");
     public final static String NC_VERSION = PropertiesUtil.getString("ns.version");
+    public final static Long NC_GENERIC_TEMPLATE = Long.parseLong(PropertiesUtil.getString("ns.generic.template"));
 
     public final static String STARTING = "Starting";
     public final static String FINISHED = "Finished";
@@ -35,11 +37,16 @@ public abstract class NotCoreUtility {
 
     public static ApplicationToUserToRegister buildApplicationToUserToRegister() {
         ApplicationToUserToRegister application = new ApplicationToUserToRegister();
-        application.setId(Long.parseLong(NotCoreUtility.NC_APPLICATION_ID));
+        application.setId(NotCoreUtility.NC_APPLICATION_ID);
         application.setLanguage("en");
         application.setName(NotCoreUtility.NC_NAME);
         application.setVersion(NotCoreUtility.NC_VERSION);
         return application;
+    }
+
+    public static ApplicationPN buildApplicationPN() {
+        ApplicationPN applicationPN = new ApplicationPN(NC_APPLICATION_ID);
+        return applicationPN;
     }
 
     public static void enableEmojis(Session session) {
