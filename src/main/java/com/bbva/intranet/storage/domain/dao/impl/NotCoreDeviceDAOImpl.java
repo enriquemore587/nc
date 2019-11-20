@@ -46,13 +46,13 @@ public class NotCoreDeviceDAOImpl implements NotCoreDeviceDAO {
                     .add(Restrictions.eq("userId", userId))
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             devices = (List<DeviceM>) criteria.list();
-            if (devices == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (devices == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return devices;
     }
