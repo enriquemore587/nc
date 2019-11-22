@@ -3,6 +3,7 @@ package com.bbva.intranet.senders.domain.dao.impl;
 import com.bbva.intranet.senders.domain.dao.Sender;
 import com.bbva.intranet.senders.domain.requests.UserToSubscribe;
 import com.bbva.intranet.senders.domain.requests.UserToUnSubscribe;
+import com.bbva.intranet.senders.domain.requests.desregister.Desregister;
 import com.bbva.intranet.senders.domain.requests.notifications.PushNotification;
 import com.bbva.intranet.senders.domain.requests.register.UserDeviceRegister;
 import com.bbva.intranet.senders.domain.requests.topics.Topic;
@@ -19,6 +20,11 @@ public class FCMImpl implements Sender {
 
     @Override
     public void register(UserDeviceRegister userDeviceRegister) throws SenderException {
+
+    }
+
+    @Override
+    public void desRegister(Desregister desregister) throws SenderException {
 
     }
 

@@ -2,6 +2,7 @@ package com.bbva.intranet.senders.domain.dao;
 
 import com.bbva.intranet.senders.domain.requests.UserToSubscribe;
 import com.bbva.intranet.senders.domain.requests.UserToUnSubscribe;
+import com.bbva.intranet.senders.domain.requests.desregister.Desregister;
 import com.bbva.intranet.senders.domain.requests.notifications.PushNotification;
 import com.bbva.intranet.senders.domain.requests.register.UserDeviceRegister;
 import com.bbva.intranet.senders.domain.requests.topics.Topic;
@@ -13,6 +14,8 @@ import java.util.Set;
 public interface Sender {
 
     void register(UserDeviceRegister userDeviceRegister) throws SenderException;
+
+    void desRegister(Desregister desregister) throws SenderException;
 
     void sendNotification(PushNotification pushNotification) throws SenderException;
     void multiSendNotification(Set<PushNotification> notifications) throws SenderException;

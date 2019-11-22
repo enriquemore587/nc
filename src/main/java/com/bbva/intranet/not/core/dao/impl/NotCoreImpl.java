@@ -7,6 +7,7 @@ import com.bbva.intranet.not.core.utilities.NotCoreUtility;
 import com.bbva.intranet.senders.domain.dao.Sender;
 import com.bbva.intranet.senders.domain.requests.UserToSubscribe;
 import com.bbva.intranet.senders.domain.requests.UserToUnSubscribe;
+import com.bbva.intranet.senders.domain.requests.desregister.Desregister;
 import com.bbva.intranet.senders.domain.requests.notifications.PushNotification;
 import com.bbva.intranet.senders.domain.requests.register.UserDeviceRegister;
 import com.bbva.intranet.senders.domain.requests.topics.Topic;
@@ -39,6 +40,18 @@ public class NotCoreImpl implements NotCore {
         NotCoreUtility.verifyChannel(channel);
         try {
             gnSender.register(deviceRegister);
+        } catch (SenderException e) {
+            throw new NotCoreException(e.getMessage());
+        }
+        LOG.info(FINISHED);
+    }
+
+    @Override
+    public void desRegister(NotCoreChannel channel, Desregister desregister) throws NotCoreException {
+        LOG.info(STARTING);
+        NotCoreUtility.verifyChannel(channel);
+        try {
+            gnSender.desRegister(desregister);
         } catch (SenderException e) {
             throw new NotCoreException(e.getMessage());
         }

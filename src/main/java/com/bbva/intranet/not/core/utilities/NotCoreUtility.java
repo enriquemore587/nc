@@ -1,5 +1,8 @@
 package com.bbva.intranet.not.core.utilities;
 
+import com.bbva.intranet.senders.domain.requests.desregister.ApplicationDesregister;
+import com.bbva.intranet.senders.domain.requests.desregister.Desregister;
+import com.bbva.intranet.senders.domain.requests.desregister.DeviceDesregister;
 import com.bbva.intranet.senders.domain.requests.notifications.ApplicationPN;
 import com.bbva.intranet.senders.domain.requests.register.ApplicationToUserToRegister;
 import com.bbva.intranet.not.core.exceptions.NotCoreException;
@@ -47,6 +50,15 @@ public abstract class NotCoreUtility {
     public static ApplicationPN buildApplicationPN() {
         ApplicationPN applicationPN = new ApplicationPN(NC_APPLICATION_ID);
         return applicationPN;
+    }
+
+
+    public static Desregister buildDesregister(String email, String uniqueDeviceId) {
+        Desregister desregister = new Desregister();
+        desregister.setApplication(new ApplicationDesregister(NC_APPLICATION_ID));
+        desregister.setDevice(new DeviceDesregister(uniqueDeviceId));
+        desregister.setUserId(email);
+        return desregister;
     }
 
     public static void enableEmojis(Session session) {

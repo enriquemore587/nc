@@ -3,6 +3,7 @@ package com.bbva.intranet.senders.domain.dao.impl;
 import com.bbva.intranet.senders.domain.dao.Sender;
 import com.bbva.intranet.senders.domain.requests.UserToSubscribe;
 import com.bbva.intranet.senders.domain.requests.UserToUnSubscribe;
+import com.bbva.intranet.senders.domain.requests.desregister.Desregister;
 import com.bbva.intranet.senders.domain.requests.notifications.PushNotification;
 import com.bbva.intranet.senders.domain.requests.register.UserDeviceRegister;
 import com.bbva.intranet.senders.domain.requests.topics.Topic;
@@ -37,6 +38,25 @@ public class GNotifierImpl implements Sender {
         String jsonData = GNUtil.objectToJson(userDeviceRegister);
         try {
             String servicePath = "/register";
+            LOG.info(String.format("sender email: %s, Method: POST, URL: %s, BODY: %s", NC_SENDER_EMAIL, servicePath, jsonData));
+            OAuthResponse oAuthResponse = client.doPost("gnotifier", servicePath, null, jsonData.getBytes());
+            if (oAuthResponse == null) throw new SenderException("oAuthResponse is null.");
+            else GNUtil.checkResponse(oAuthResponse);
+        } catch (OAuthClientException e) {
+            LOG.error(GNUtil.exceptionMessageToPrint(jsonData, e));
+            throw new GNotifierException(String.format("GN | No was register"));
+        }
+    }
+
+    @Override
+    public void desRegister(Desregister desregister) throws SenderException {
+        GatewayClient client = new GatewayClient(NC_SENDER_EMAIL);
+        client.setThrowExceptionOnExecuteError(false);
+        client.getHeaders().setContentType("application/json; charset=UTF-8");
+        client.setEncodeQueryParams(true);
+        String jsonData = GNUtil.objectToJson(desregister);
+        try {
+            String servicePath = "/deregister";
             LOG.info(String.format("sender email: %s, Method: POST, URL: %s, BODY: %s", NC_SENDER_EMAIL, servicePath, jsonData));
             OAuthResponse oAuthResponse = client.doPost("gnotifier", servicePath, null, jsonData.getBytes());
             if (oAuthResponse == null) throw new SenderException("oAuthResponse is null.");

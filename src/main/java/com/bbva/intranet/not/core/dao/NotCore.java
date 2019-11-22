@@ -4,6 +4,7 @@ import com.bbva.intranet.not.core.exceptions.NotCoreException;
 import com.bbva.intranet.not.core.utilities.NotCoreChannel;
 import com.bbva.intranet.senders.domain.requests.UserToSubscribe;
 import com.bbva.intranet.senders.domain.requests.UserToUnSubscribe;
+import com.bbva.intranet.senders.domain.requests.desregister.Desregister;
 import com.bbva.intranet.senders.domain.requests.notifications.PushNotification;
 import com.bbva.intranet.senders.domain.requests.register.UserDeviceRegister;
 import com.bbva.intranet.senders.domain.requests.topics.Topic;
@@ -13,6 +14,8 @@ import java.util.Set;
 public interface NotCore {
 
     void register(NotCoreChannel channel, UserDeviceRegister deviceRegister) throws NotCoreException;
+
+    void desRegister(NotCoreChannel channel, Desregister desregister) throws NotCoreException;
     
     void sendNotification(NotCoreChannel channel, PushNotification pushNotification) throws NotCoreException;
     
