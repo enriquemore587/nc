@@ -1,2 +1,4 @@
 not-core.iml
 target/
+.idea/
+.metadata/

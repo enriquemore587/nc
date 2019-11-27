@@ -74,13 +74,13 @@ public class NotCoreDeviceDAOImpl implements NotCoreDeviceDAO {
                     )
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             deviceM = (DeviceM) criteria.uniqueResult();
-            if (deviceM == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (deviceM == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return deviceM;
     }
@@ -97,13 +97,13 @@ public class NotCoreDeviceDAOImpl implements NotCoreDeviceDAO {
                     .add(Restrictions.eq("id", id))
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             device = (DeviceM) criteria.uniqueResult();
-            if (device == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (device == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return device;
     }

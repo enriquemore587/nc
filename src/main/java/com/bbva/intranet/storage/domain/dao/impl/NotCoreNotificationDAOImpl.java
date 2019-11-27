@@ -46,13 +46,13 @@ public class NotCoreNotificationDAOImpl implements NotCoreNotificationDAO {
             Criteria criteria = session.createCriteria(NotificationM.class)
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             notifications = (List<NotificationM>) criteria.list();
-            if (notifications == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (notifications == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return notifications;
     }
@@ -69,13 +69,13 @@ public class NotCoreNotificationDAOImpl implements NotCoreNotificationDAO {
                     .add(Restrictions.eq("id", id))
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             notification = (NotificationM) criteria.uniqueResult();
-            if (notification == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (notification == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return notification;
     }
@@ -92,13 +92,13 @@ public class NotCoreNotificationDAOImpl implements NotCoreNotificationDAO {
                     .add(Restrictions.eq("templateId", templateId))
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             notification = (NotificationM) criteria.uniqueResult();
-            if (notification == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (notification == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return notification;
     }

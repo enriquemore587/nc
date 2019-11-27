@@ -45,13 +45,13 @@ public class NotCoreTopicDAOImpl implements NotCoreTopicDAO {
             Criteria criteria = session.createCriteria(TopicM.class)
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             topics = (List<TopicM>) criteria.list();
-            if (topics == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (topics == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return topics;
     }
@@ -68,13 +68,13 @@ public class NotCoreTopicDAOImpl implements NotCoreTopicDAO {
                     .add(Restrictions.eq("id", id))
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             topic = (TopicM) criteria.uniqueResult();
-            if (topic == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (topic == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return topic;
     }
@@ -91,13 +91,13 @@ public class NotCoreTopicDAOImpl implements NotCoreTopicDAO {
                     .add(Restrictions.eq("name", name))
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             topic = (TopicM) criteria.uniqueResult();
-            if (topic == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (topic == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return topic;
     }

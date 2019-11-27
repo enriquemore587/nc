@@ -45,13 +45,13 @@ public class NotCoreUserDAOImpl implements NotCoreUserDAO {
             Criteria criteria = session.createCriteria(UserM.class)
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             userMList = (List<UserM>) criteria.list();
-            if (userMList == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null)session.close();
         }
+        if (userMList == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return userMList;
     }
@@ -68,13 +68,13 @@ public class NotCoreUserDAOImpl implements NotCoreUserDAO {
                     .add(Restrictions.eq("id", id))
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             user = (UserM) criteria.uniqueResult();
-            if (user == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (user == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return user;
     }
@@ -91,13 +91,13 @@ public class NotCoreUserDAOImpl implements NotCoreUserDAO {
                     .add(Restrictions.eq("email", email))
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             user = (UserM) criteria.uniqueResult();
-            if (user == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (user == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return user;
     }

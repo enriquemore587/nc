@@ -45,13 +45,13 @@ public class NotCoreNotificationSentDAOImpl implements NotCoreNotificationSentDA
             Criteria criteria = session.createCriteria(NotificationSentM.class)
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             notifications = (List<NotificationSentM>) criteria.list();
-            if (notifications == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (notifications == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return notifications;
     }
@@ -68,13 +68,13 @@ public class NotCoreNotificationSentDAOImpl implements NotCoreNotificationSentDA
                     .add(Restrictions.eq("id", id))
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             notificationSent = (NotificationSentM) criteria.uniqueResult();
-            if (notificationSent == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (notificationSent == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return notificationSent;
     }
@@ -91,13 +91,13 @@ public class NotCoreNotificationSentDAOImpl implements NotCoreNotificationSentDA
                     .add(Restrictions.eq("userId", userId))
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             notifications = (List<NotificationSentM>) criteria.list();
-            if (notifications == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (notifications == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return notifications;
     }
@@ -117,13 +117,13 @@ public class NotCoreNotificationSentDAOImpl implements NotCoreNotificationSentDA
                     ))
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             notifications = (List<NotificationSentM>) criteria.list();
-            if (notifications == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (notifications == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return notifications;
     }
@@ -144,13 +144,13 @@ public class NotCoreNotificationSentDAOImpl implements NotCoreNotificationSentDA
                     ))
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             notifications = (List<NotificationSentM>) criteria.list();
-            if (notifications == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (notifications == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return notifications;
     }
@@ -167,13 +167,13 @@ public class NotCoreNotificationSentDAOImpl implements NotCoreNotificationSentDA
                     .add(Restrictions.eq("notificationId", notificationId))
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             notifications = (List<NotificationSentM>) criteria.list();
-            if (notifications == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (notifications == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return notifications;
     }

@@ -26,7 +26,6 @@ import com.bbva.intranet.storage.domain.model.NotificationSentM;
 import com.bbva.intranet.storage.domain.model.TopicM;
 import com.bbva.intranet.storage.domain.model.UserM;
 import com.bbva.intranet.storage.domain.model.UserTopicM;
-import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -289,7 +288,7 @@ public class NotCoreStorageImpl implements NotCore {
             LOG.info(String.format("Checking if «%s» is already in «%s» topic", email, topicName));
             notCoreUserTopicDAO.findBy(userId, topicId);
             throw new NotCoreException(String.format("«%s» is already exist in «%s»", email, topicName));
-        } catch (NotFoundException e) {
+        } catch (NoRecordFoundException e) {
             UserTopicM userTopicM = new UserTopicM();
                 userTopicM.setTopicId(topicId);
                 userTopicM.setUserId(userId);
@@ -342,7 +341,7 @@ public class NotCoreStorageImpl implements NotCore {
             notCoreUserTopicDAO.delete(userTopicM);
             LOG.info(String.format("GNotifier remove «%s» from «%s» topic", email, topicName));
             gnSender.unSubscribeUserIntoTopic(topicName, userToUnSubscribe);
-        } catch (NotFoundException e) {
+        } catch (NoRecordFoundException e) {
             throw new NotCoreException(String.format("«%s» doesn't exist in «%s»", email, topicName));
         } catch (TransactionStoppedException e) {
             throw new NotCoreException(e.getMessage());

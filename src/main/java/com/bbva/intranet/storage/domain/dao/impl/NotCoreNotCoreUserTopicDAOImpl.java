@@ -5,7 +5,6 @@ import com.bbva.intranet.not.core.exceptions.TransactionStoppedException;
 import com.bbva.intranet.not.core.utilities.NotCoreUtility;
 import com.bbva.intranet.storage.domain.dao.NotCoreUserTopicDAO;
 import com.bbva.intranet.storage.domain.model.UserTopicM;
-import javassist.NotFoundException;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -36,7 +35,7 @@ public class NotCoreNotCoreUserTopicDAOImpl implements NotCoreUserTopicDAO {
     }
 
     @Override
-    public List<UserTopicM> findByTopicId(Long topicId) throws NotFoundException, TransactionStoppedException {
+    public List<UserTopicM> findByTopicId(Long topicId) throws NoRecordFoundException, TransactionStoppedException {
         LOG.info(STARTING);
         List<UserTopicM> userTopicMS = null;
         Session session = null;
@@ -47,19 +46,19 @@ public class NotCoreNotCoreUserTopicDAOImpl implements NotCoreUserTopicDAO {
                     .add(Restrictions.eq("topicId", topicId))
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             userTopicMS = (List<UserTopicM>) criteria.list();
-            if (userTopicMS == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (userTopicMS == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return userTopicMS;
     }
 
     @Override
-    public List<UserTopicM> findByUserId(Long userId) throws NotFoundException, TransactionStoppedException {
+    public List<UserTopicM> findByUserId(Long userId) throws NoRecordFoundException, TransactionStoppedException {
         LOG.info(STARTING);
         List<UserTopicM> userTopicMS = null;
         Session session = null;
@@ -70,19 +69,19 @@ public class NotCoreNotCoreUserTopicDAOImpl implements NotCoreUserTopicDAO {
                     .add(Restrictions.eq("userId", userId))
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             userTopicMS = (List<UserTopicM>) criteria.list();
-            if (userTopicMS == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (userTopicMS == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return userTopicMS;
     }
 
     @Override
-    public UserTopicM findBy(Long userId, Long topicId) throws NotFoundException, TransactionStoppedException {
+    public UserTopicM findBy(Long userId, Long topicId) throws NoRecordFoundException, TransactionStoppedException {
         LOG.info(STARTING);
         UserTopicM userTopicM = null;
         Session session = null;
@@ -98,13 +97,13 @@ public class NotCoreNotCoreUserTopicDAOImpl implements NotCoreUserTopicDAO {
                     )
                     .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             userTopicM = (UserTopicM) criteria.uniqueResult();
-            if (userTopicM == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         } catch (Exception e) {
             LOG.error(e.getMessage());
             throw new TransactionStoppedException(UNCONTROLLED_ERROR_MESSAGE);
         } finally {
             if (session != null) session.close();
         }
+        if (userTopicM == null) throw new NoRecordFoundException(RECORD_NO_FOUND_MESSAGE);
         LOG.info(FINISHED);
         return userTopicM;
     }
