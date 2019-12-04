@@ -28,4 +28,12 @@ public class SenderException extends Exception {
         this.code = code;
     }
 
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
 }
