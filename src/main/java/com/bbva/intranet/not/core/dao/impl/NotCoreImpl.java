@@ -41,7 +41,7 @@ public class NotCoreImpl implements NotCore {
         try {
             gnSender.register(deviceRegister);
         } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage());
+            throw new NotCoreException(e.getMessage(), e.getCode());
         }
         LOG.info(FINISHED);
     }
@@ -53,7 +53,7 @@ public class NotCoreImpl implements NotCore {
         try {
             gnSender.desRegister(desregister);
         } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage());
+            throw new NotCoreException(e.getMessage(), e.getCode());
         }
         LOG.info(FINISHED);
     }
@@ -65,7 +65,7 @@ public class NotCoreImpl implements NotCore {
         try {
             gnSender.sendNotification(pushNotification);
         } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage());
+            throw new NotCoreException(e.getMessage(), e.getCode());
         }
         LOG.info(FINISHED);
     }
@@ -77,7 +77,7 @@ public class NotCoreImpl implements NotCore {
         try {
             gnSender.multiSendNotification(notifications);
         } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage());
+            throw new NotCoreException(e.getMessage(), e.getCode());
         }
         LOG.info(FINISHED);
     }
@@ -89,7 +89,7 @@ public class NotCoreImpl implements NotCore {
         try {
             topicResp = gnSender.topicsBySenderEmail(pageSize, paginationKey);
         } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage());
+            throw new NotCoreException(e.getMessage(), e.getCode());
         }
         LOG.info(FINISHED);
         return topicResp;
@@ -102,7 +102,7 @@ public class NotCoreImpl implements NotCore {
         try {
             gnSender.createTopic(topic);
         } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage());
+            throw new NotCoreException(e.getMessage(), e.getCode());
         }
         LOG.info(FINISHED);
     }
@@ -114,7 +114,7 @@ public class NotCoreImpl implements NotCore {
         try {
             gnSender.deleteTopic(topicName);
         } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage());
+            throw new NotCoreException(e.getMessage(), e.getCode());
         }
         LOG.info(FINISHED);
     }
@@ -126,7 +126,7 @@ public class NotCoreImpl implements NotCore {
         try {
             gnSender.updateTopic(topicName, topic);
         } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage());
+            throw new NotCoreException(e.getMessage(), e.getCode());
         }
         LOG.info(FINISHED);
     }
@@ -138,7 +138,7 @@ public class NotCoreImpl implements NotCore {
         try {
             gnSender.subscribeUserIntoTopic(topicName, userToSubscribe);
         } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage());
+            throw new NotCoreException(e.getMessage(), e.getCode());
         }
         LOG.info(FINISHED);
     }
@@ -150,7 +150,7 @@ public class NotCoreImpl implements NotCore {
         try {
             gnSender.unSubscribeUserIntoTopic(topicName, userToUnSubscribe);
         } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage());
+            throw new NotCoreException(e.getMessage(), e.getCode());
         }
         LOG.info(FINISHED);
     }

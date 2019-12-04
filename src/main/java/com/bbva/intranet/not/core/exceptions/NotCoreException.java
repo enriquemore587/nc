@@ -31,4 +31,13 @@ public class NotCoreException extends Exception {
     public static class TransactionStoppedException {
     }
 
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+    public Integer getCode() {
+
+        return code;
+    }
 }

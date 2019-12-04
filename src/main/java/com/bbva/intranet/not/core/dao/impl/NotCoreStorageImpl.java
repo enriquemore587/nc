@@ -116,7 +116,7 @@ public class NotCoreStorageImpl implements NotCore {
             } catch (TransactionStoppedException deleteException) {
                 throw new NotCoreException(deleteException.getMessage());
             }
-            throw new NotCoreException(senderException.getMessage());
+            throw new NotCoreException(senderException.getMessage(), senderException.getCode());
         }
     }
 
@@ -174,7 +174,7 @@ public class NotCoreStorageImpl implements NotCore {
             } catch (TransactionStoppedException deleteException) {
                 throw new NotCoreException(deleteException.getMessage());
             }
-            throw new NotCoreException(senderException.getMessage());
+            throw new NotCoreException(senderException.getMessage(), senderException.getCode());
         }
     }
 
@@ -217,7 +217,7 @@ public class NotCoreStorageImpl implements NotCore {
                 } catch (TransactionStoppedException deleteException) {
                     throw new NotCoreException(deleteException.getMessage());
                 }
-                throw new NotCoreException(senderException.getMessage());
+                throw new NotCoreException(senderException.getMessage(), senderException.getCode());
             }
         } catch (TransactionStoppedException e) {
             throw new NotCoreException(e.getMessage());
@@ -234,7 +234,9 @@ public class NotCoreStorageImpl implements NotCore {
             gnSender.deleteTopic(topicName);
             LOG.info("NotCore delete topic");
             notCoreTopicDAO.delete(topicM);
-        } catch (SenderException | NoRecordFoundException e) {
+        } catch (SenderException e) {
+            throw new NotCoreException(e.getMessage(), e.getCode());
+        } catch (NoRecordFoundException e) {
             throw new NotCoreException(e.getMessage());
         } catch (TransactionStoppedException e) {
             throw new NotCoreException(e.getMessage());
@@ -258,7 +260,7 @@ public class NotCoreStorageImpl implements NotCore {
         } catch (TransactionStoppedException e) {
             throw new NotCoreException(e.getMessage());
         } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage());
+            throw new NotCoreException(e.getMessage(), e.getCode());
         }
     }
 
@@ -302,7 +304,7 @@ public class NotCoreStorageImpl implements NotCore {
             } catch (SenderException senderException) {
                 try {
                     notCoreUserTopicDAO.delete(userTopicM);
-                    throw new NotCoreException(senderException.getMessage());
+                    throw new NotCoreException(senderException.getMessage(), senderException.getCode());
                 } catch (TransactionStoppedException deleteException) {
                     LOG.error(senderException.getMessage());
                     throw new NotCoreException(deleteException.getMessage());
@@ -351,7 +353,7 @@ public class NotCoreStorageImpl implements NotCore {
                     userTopicM.setTopicId(topicId);
                     userTopicM.setUserId(userId);
                 notCoreUserTopicDAO.save(userTopicM);
-                throw new NotCoreException(senderException.getMessage());
+                throw new NotCoreException(senderException.getMessage(), senderException.getCode());
             } catch (TransactionStoppedException saveException) {
                 LOG.error(senderException.getMessage());
                 throw new NotCoreException(saveException.getMessage());
