@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class FCMImpl implements Sender {
 
-    public static Logger LOG = LoggerFactory.getLogger(FCMImpl.class);
+    private static Logger LOG = LoggerFactory.getLogger(FCMImpl.class);
 
     @Override
     public void register(UserDeviceRegister userDeviceRegister) throws SenderException {

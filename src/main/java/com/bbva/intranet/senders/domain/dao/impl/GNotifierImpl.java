@@ -24,13 +24,16 @@ import java.util.Set;
 
 import static com.bbva.intranet.not.core.utilities.NotCoreUtility.NC_SENDER_EMAIL;
 import static com.bbva.intranet.not.core.utilities.NotCoreUtility.NC_SENDER_ID;
+import static com.bbva.intranet.not.core.utilities.NotCoreUtility.STARTING;
+import static com.bbva.intranet.not.core.utilities.NotCoreUtility.FINISHED;
 
 public class GNotifierImpl implements Sender {
 
-    public static Logger LOG = LoggerFactory.getLogger(GNotifierImpl.class);
+    private static Logger LOG = LoggerFactory.getLogger(GNotifierImpl.class);
 
     @Override
     public void register(UserDeviceRegister userDeviceRegister) throws SenderException {
+        LOG.info(STARTING);
         GatewayClient client = new GatewayClient(NC_SENDER_EMAIL);
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
@@ -40,16 +43,18 @@ public class GNotifierImpl implements Sender {
             String servicePath = "/register";
             LOG.info(String.format("sender email: %s, Method: POST, URL: %s, BODY: %s", NC_SENDER_EMAIL, servicePath, jsonData));
             OAuthResponse oAuthResponse = client.doPost("gnotifier", servicePath, null, jsonData.getBytes());
-            if (oAuthResponse == null) throw new SenderException("oAuthResponse is null.");
+            if (oAuthResponse == null) throw new GNotifierException("oAuthResponse is null.");
             else GNUtil.checkResponse(oAuthResponse);
         } catch (OAuthClientException e) {
             LOG.error(GNUtil.exceptionMessageToPrint(jsonData, e));
-            throw new GNotifierException(String.format("GN | No was register"));
+            throw new GNotifierException(e.getMessage(), e.getCode());
         }
+        LOG.info(FINISHED);
     }
 
     @Override
     public void desRegister(Desregister desregister) throws SenderException {
+        LOG.info(STARTING);
         GatewayClient client = new GatewayClient(NC_SENDER_EMAIL);
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
@@ -59,16 +64,18 @@ public class GNotifierImpl implements Sender {
             String servicePath = "/deregister";
             LOG.info(String.format("sender email: %s, Method: POST, URL: %s, BODY: %s", NC_SENDER_EMAIL, servicePath, jsonData));
             OAuthResponse oAuthResponse = client.doPost("gnotifier", servicePath, null, jsonData.getBytes());
-            if (oAuthResponse == null) throw new SenderException("oAuthResponse is null.");
+            if (oAuthResponse == null) throw new GNotifierException("oAuthResponse is null.");
             else GNUtil.checkResponse(oAuthResponse);
         } catch (OAuthClientException e) {
             LOG.error(GNUtil.exceptionMessageToPrint(jsonData, e));
-            throw new GNotifierException(String.format("GN | No was register"));
+            throw new GNotifierException(e.getMessage(), e.getCode());
         }
+        LOG.info(FINISHED);
     }
 
     @Override
     public void sendNotification(PushNotification pushNotification) throws SenderException {
+        LOG.info(STARTING);
         GatewayClient client = new GatewayClient(NC_SENDER_EMAIL);
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
@@ -82,12 +89,14 @@ public class GNotifierImpl implements Sender {
             else GNUtil.checkResponse(oAuthResponse);
         } catch (OAuthClientException e) {
             LOG.error(GNUtil.exceptionMessageToPrint(jsonData, e));
-            throw new GNotifierException(String.format("GN | Couldn't send notification"));
+            throw new GNotifierException(e.getMessage(), e.getCode());
         }
+        LOG.info(FINISHED);
     }
 
     @Override
     public void multiSendNotification(Set<PushNotification> notifications) throws SenderException {
+        LOG.info(STARTING);
         int count = 0;
         for (PushNotification notification : notifications) {
             try {
@@ -98,10 +107,13 @@ public class GNotifierImpl implements Sender {
         }
         if (count == notifications.size()) throw new SenderException("GN | All notifications failed");
         LOG.info(String.format("%s notifications failed from %s", count, notifications.size()));
+        LOG.info(FINISHED);
     }
 
     @Override
     public TopicResp topicsBySenderEmail(Integer pageSize, Integer paginationKey) throws SenderException {
+        LOG.info(STARTING);
+        TopicResp topicResp = null;
         GatewayClient client = new GatewayClient(NC_SENDER_EMAIL);
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
@@ -113,18 +125,22 @@ public class GNotifierImpl implements Sender {
             String servicePath = "/topics";
             LOG.info(String.format("sender email: %s, Method: GET, URL: %s, QUERY_PARAMS: [%s]", NC_SENDER_EMAIL, servicePath, queryParams));
             OAuthResponse oAuthResponse = client.doGet("gnotifier", servicePath, queryParams);
-            if (oAuthResponse == null) throw new SenderException("oAuthResponse is null.");
+            if (oAuthResponse == null) throw new GNotifierException("oAuthResponse is null.");
             else {
                 GNotifier response = (GNotifier) GNUtil.buildResponse(oAuthResponse, GNotifier.class);
-                return (TopicResp) response.getData();
+                topicResp = (TopicResp) response.getData();
             }
         } catch (OAuthClientException e) {
-            throw new SenderException(String.format("GN | Couldn't fetch results to %s", NC_SENDER_EMAIL));
+            LOG.error(GNUtil.exceptionMessageToPrint(queryParams.toString(), e));
+            throw new GNotifierException(e.getMessage(), e.getCode());
         }
+        LOG.info(FINISHED);
+        return topicResp;
     }
 
     @Override
     public void createTopic(Topic topic) throws SenderException {
+        LOG.info(STARTING);
         GatewayClient client = new GatewayClient(NC_SENDER_EMAIL);
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
@@ -135,16 +151,18 @@ public class GNotifierImpl implements Sender {
             String servicePath = "/topics";
             LOG.info(String.format("sender email: %s, Method: POST, URL: %s, BODY: %s", NC_SENDER_EMAIL, servicePath, jsonData));
             OAuthResponse oAuthResponse = client.doPost("gnotifier", servicePath, null, jsonData.getBytes());
-            if (oAuthResponse == null) throw new SenderException("GN | oAuthResponse is null.");
+            if (oAuthResponse == null) throw new GNotifierException("GN | oAuthResponse is null.");
             else GNUtil.checkResponse(oAuthResponse);
         } catch (OAuthClientException e) {
             LOG.error(GNUtil.exceptionMessageToPrint(jsonData, e));
-            throw new SenderException(String.format("GN | Couldn't create %s topic", topic.getName()));
+            throw new GNotifierException(e.getMessage(), e.getCode());
         }
+        LOG.info(FINISHED);
     }
 
     @Override
     public void deleteTopic(String topicName) throws SenderException {
+        LOG.info(STARTING);
         GatewayClient client = new GatewayClient(NC_SENDER_EMAIL);
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
@@ -154,16 +172,18 @@ public class GNotifierImpl implements Sender {
             servicePath = String.format("/topics/%s", topicName);
             LOG.info(String.format("sender email %s, Method: DELETE, URL: %s", NC_SENDER_EMAIL, servicePath));
             OAuthResponse oAuthResponse = client.doDelete("gnotifier", servicePath, null);
-            if (oAuthResponse == null) throw new SenderException("GN | oAuthResponse is null.");
+            if (oAuthResponse == null) throw new GNotifierException("GN | oAuthResponse is null.");
             else GNUtil.checkResponse(oAuthResponse);
         } catch (OAuthClientException e) {
-            LOG.error(GNUtil.exceptionMessageToPrint(servicePath, e));
-            throw new SenderException(String.format("GN | Couldn't delete %s topic", topicName));
+            LOG.error(GNUtil.exceptionMessageToPrint(topicName, e));
+            throw new GNotifierException(e.getMessage(), e.getCode());
         }
+        LOG.info(FINISHED);
     }
 
     @Override
     public void updateTopic(String topicName, Topic topic) throws SenderException {
+        LOG.info(STARTING);
         GatewayClient client = new GatewayClient(NC_SENDER_EMAIL);
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
@@ -173,16 +193,18 @@ public class GNotifierImpl implements Sender {
             String servicePath = String.format("/topics/%s", topicName);
             LOG.info(String.format("sender email: %s, Method: PUT, URL: %s, BODY: [%s]", NC_SENDER_EMAIL, servicePath, jsonData));
             OAuthResponse oAuthResponse = client.doPut("gnotifier", servicePath, null, jsonData.getBytes());
-            if (oAuthResponse == null) throw new SenderException("GN | oAuthResponse is null.");
+            if (oAuthResponse == null) throw new GNotifierException("GN | oAuthResponse is null.");
             else GNUtil.checkResponse(oAuthResponse);
         } catch (OAuthClientException e) {
             LOG.error(GNUtil.exceptionMessageToPrint(jsonData, e));
-            throw new SenderException(String.format("GN | Couldn't update %s topic", topic.getName()));
+            throw new GNotifierException(e.getMessage(), e.getCode());
         }
+        LOG.info(FINISHED);
     }
 
     @Override
     public void subscribeUserIntoTopic(String topicName, UserToSubscribe userToSubscribe) throws SenderException {
+        LOG.info(STARTING);
         GatewayClient client = new GatewayClient(NC_SENDER_EMAIL);
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
@@ -192,16 +214,18 @@ public class GNotifierImpl implements Sender {
             String servicePath = String.format("/topics/%s/users", topicName);
             LOG.info(String.format("sender email: %s, Method: POST, URL: %s, BODY: %s", NC_SENDER_EMAIL, servicePath, jsonData));
             OAuthResponse oAuthResponse = client.doPost("gnotifier", servicePath, null, jsonData.getBytes());
-            if (oAuthResponse == null) throw new SenderException("GN | oAuthResponse is null.");
+            if (oAuthResponse == null) throw new GNotifierException("GN | oAuthResponse is null.");
             else GNUtil.checkResponse(oAuthResponse);
         } catch (OAuthClientException e) {
             LOG.error(GNUtil.exceptionMessageToPrint(jsonData, e));
-            throw new SenderException(String.format("GN | Couldn't subscribe %s into %s topic", userToSubscribe.getUser(), topicName));
+            throw new GNotifierException(e.getMessage(), e.getCode());
         }
+        LOG.info(FINISHED);
     }
 
     @Override
     public void unSubscribeUserIntoTopic(String topicName, UserToUnSubscribe userToUnSubscribe) throws SenderException {
+        LOG.info(STARTING);
         GatewayClient client = new GatewayClient(NC_SENDER_EMAIL);
         client.setThrowExceptionOnExecuteError(false);
         client.getHeaders().setContentType("application/json; charset=UTF-8");
@@ -212,11 +236,12 @@ public class GNotifierImpl implements Sender {
             queryParams.put("application_id", Long.toString(userToUnSubscribe.getApplicationId()));
             LOG.info(String.format("sender email: %s, Method: DELETE, URL: %s, QUERY_PARAMS: %s", NC_SENDER_EMAIL, servicePath, queryParams));
             OAuthResponse oAuthResponse = client.doDelete("gnotifier", servicePath, queryParams);
-            if (oAuthResponse == null) throw new SenderException("GN | oAuthResponse is null.");
+            if (oAuthResponse == null) throw new GNotifierException("GN | oAuthResponse is null.");
             else GNUtil.checkResponse(oAuthResponse);
         } catch (OAuthClientException e) {
             LOG.error(GNUtil.exceptionMessageToPrint("application_id : "+userToUnSubscribe.getApplicationId(), e));
-            throw new SenderException(String.format("GN | Couldn't remove %s from %s topic", userToUnSubscribe.getUserId(), topicName));
+            throw new GNotifierException(e.getMessage(), e.getCode());
         }
+        LOG.info(FINISHED);
     }
 }

@@ -16,8 +16,6 @@ import com.bbva.intranet.senders.exceptions.SenderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Set;
-
 import static com.bbva.intranet.not.core.utilities.NotCoreUtility.FINISHED;
 import static com.bbva.intranet.not.core.utilities.NotCoreUtility.STARTING;
 
@@ -35,123 +33,74 @@ public class NotCoreImpl implements NotCore {
     }
 
     @Override
-    public void register(NotCoreChannel channel, UserDeviceRegister deviceRegister) throws NotCoreException {
+    public void register(NotCoreChannel channel, UserDeviceRegister deviceRegister) throws NotCoreException, SenderException {
         LOG.info(STARTING);
         NotCoreUtility.verifyChannel(channel);
-        try {
-            gnSender.register(deviceRegister);
-        } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage(), e.getCode());
-        }
+        gnSender.register(deviceRegister);
         LOG.info(FINISHED);
     }
 
     @Override
-    public void desRegister(NotCoreChannel channel, Desregister desregister) throws NotCoreException {
+    public void desRegister(NotCoreChannel channel, Desregister desregister) throws NotCoreException, SenderException {
         LOG.info(STARTING);
         NotCoreUtility.verifyChannel(channel);
-        try {
-            gnSender.desRegister(desregister);
-        } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage(), e.getCode());
-        }
+        gnSender.desRegister(desregister);
         LOG.info(FINISHED);
     }
 
     @Override
-    public void sendNotification(NotCoreChannel channel, PushNotification pushNotification) throws NotCoreException {
+    public void sendNotification(NotCoreChannel channel, PushNotification pushNotification) throws NotCoreException, SenderException {
         LOG.info(STARTING);
         NotCoreUtility.verifyChannel(channel);
-        try {
-            gnSender.sendNotification(pushNotification);
-        } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage(), e.getCode());
-        }
+        gnSender.sendNotification(pushNotification);
         LOG.info(FINISHED);
     }
 
-    @Override
-    public void multiSendNotification(NotCoreChannel channel, Set<PushNotification> notifications) throws NotCoreException {
+    private TopicResp topicsBySenderEmail(NotCoreChannel channel, Integer pageSize, Integer paginationKey) throws NotCoreException, SenderException {
         LOG.info(STARTING);
         NotCoreUtility.verifyChannel(channel);
-        try {
-            gnSender.multiSendNotification(notifications);
-        } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage(), e.getCode());
-        }
-        LOG.info(FINISHED);
-    }
-
-    private TopicResp topicsBySenderEmail(NotCoreChannel channel, Integer pageSize, Integer paginationKey) throws NotCoreException {
-        LOG.info(STARTING);
-        NotCoreUtility.verifyChannel(channel);
-        TopicResp topicResp = null;
-        try {
-            topicResp = gnSender.topicsBySenderEmail(pageSize, paginationKey);
-        } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage(), e.getCode());
-        }
+        TopicResp topicResp = gnSender.topicsBySenderEmail(pageSize, paginationKey);
         LOG.info(FINISHED);
         return topicResp;
     }
 
     @Override
-    public void createTopic(NotCoreChannel channel, Topic topic) throws NotCoreException {
+    public void createTopic(NotCoreChannel channel, Topic topic) throws NotCoreException, SenderException {
         LOG.info(STARTING);
         NotCoreUtility.verifyChannel(channel);
-        try {
-            gnSender.createTopic(topic);
-        } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage(), e.getCode());
-        }
+        gnSender.createTopic(topic);
         LOG.info(FINISHED);
     }
 
     @Override
-    public void deleteTopic(NotCoreChannel channel, String topicName) throws NotCoreException {
+    public void deleteTopic(NotCoreChannel channel, String topicName) throws NotCoreException, SenderException {
         LOG.info(STARTING);
         NotCoreUtility.verifyChannel(channel);
-        try {
-            gnSender.deleteTopic(topicName);
-        } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage(), e.getCode());
-        }
+        gnSender.deleteTopic(topicName);
         LOG.info(FINISHED);
     }
 
     @Override
-    public void updateTopic(NotCoreChannel channel, String topicName, Topic topic) throws NotCoreException {
+    public void updateTopic(NotCoreChannel channel, String topicName, Topic topic) throws NotCoreException, SenderException {
         LOG.info(STARTING);
         NotCoreUtility.verifyChannel(channel);
-        try {
-            gnSender.updateTopic(topicName, topic);
-        } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage(), e.getCode());
-        }
+        gnSender.updateTopic(topicName, topic);
         LOG.info(FINISHED);
     }
 
     @Override
-    public void subscribeUserIntoTopic(NotCoreChannel channel, String topicName, UserToSubscribe userToSubscribe) throws NotCoreException {
+    public void subscribeUserIntoTopic(NotCoreChannel channel, String topicName, UserToSubscribe userToSubscribe) throws NotCoreException, SenderException {
         LOG.info(STARTING);
         NotCoreUtility.verifyChannel(channel);
-        try {
-            gnSender.subscribeUserIntoTopic(topicName, userToSubscribe);
-        } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage(), e.getCode());
-        }
+        gnSender.subscribeUserIntoTopic(topicName, userToSubscribe);
         LOG.info(FINISHED);
     }
 
     @Override
-    public void unSubscribeUserIntoTopic(NotCoreChannel channel, String topicName, UserToUnSubscribe userToUnSubscribe) throws NotCoreException {
+    public void unSubscribeUserIntoTopic(NotCoreChannel channel, String topicName, UserToUnSubscribe userToUnSubscribe) throws NotCoreException, SenderException {
         LOG.info(STARTING);
         NotCoreUtility.verifyChannel(channel);
-        try {
-            gnSender.unSubscribeUserIntoTopic(topicName, userToUnSubscribe);
-        } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage(), e.getCode());
-        }
+        gnSender.unSubscribeUserIntoTopic(topicName, userToUnSubscribe);
         LOG.info(FINISHED);
     }
 }

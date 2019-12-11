@@ -30,7 +30,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
-import java.util.Set;
+
+import static com.bbva.intranet.not.core.utilities.NotCoreUtility.STARTING;
+import static com.bbva.intranet.not.core.utilities.NotCoreUtility.FINISHED;
 
 public class NotCoreStorageImpl implements NotCore {
 
@@ -57,34 +59,59 @@ public class NotCoreStorageImpl implements NotCore {
     }
 
     @Override
-    public void register(NotCoreChannel channel, UserDeviceRegister deviceRegister) throws NotCoreException {
+    public void register(NotCoreChannel channel, UserDeviceRegister deviceRegister) throws NotCoreException, SenderException {
+        LOG.info(STARTING);
         NotCoreUtility.verifyChannel(channel);
+        NotCoreUtility.verifyPojo(deviceRegister);
+        LOG.info("Registry device in GNotifier");
+        gnSender.register(deviceRegister);
+        deviceStorage(deviceRegister);
+        LOG.info(FINISHED);
+    }
+
+    private void deviceStorage(UserDeviceRegister deviceRegister) throws NotCoreException {
+        LOG.info(STARTING);
+        UserM userM = fetchUserM(deviceRegister);
+        saveUpdateDeviceM(deviceRegister, userM);
+        LOG.info(FINISHED);
+    }
+
+    private UserM fetchUserM(UserDeviceRegister deviceRegister) throws NotCoreException {
+        LOG.info(STARTING);
         String email = deviceRegister.getUserId();
-        String deviceId = deviceRegister.getUserId();
         UserM userM = null;
-        DeviceM deviceM =  null;
         try {
-            LOG.info("Fetching «%s» user", email);
+            LOG.info("Fetching user with email «%s»", email);
             userM = notCoreUserDAO.findByEmail(email);
             LOG.info(String.format("«%s» is already exist", email));
         } catch (NoRecordFoundException e) {
             LOG.info(String.format("«%s» doesn't exist", email));
             userM = new UserM(email);
             try {
-                LOG.info("User storage");
+                LOG.info("User storage. Cause doesn't exist");
                 notCoreUserDAO.save(userM);
             } catch (TransactionStoppedException saveUserException) {
-                throw new NotCoreException(String.format("Failed user storage but it was registered in GNotifier"));
+                LOG.error(saveUserException.getMessage());
+                throw new NotCoreException(String.format("Failed user storage"));
             }
         } catch (TransactionStoppedException e) {
             throw new NotCoreException(e.getMessage());
         }
-        Long userId = userM.getId();
+        LOG.info(FINISHED);
+        return userM;
+    }
+
+    private void saveUpdateDeviceM(UserDeviceRegister deviceRegister, UserM userM) throws NotCoreException {
+        LOG.info(STARTING);
+        NotCoreUtility.verifyPojo(userM);
+        String deviceId = deviceRegister.getDevice().getId();
+        DeviceM deviceM = null;
         try {
-            LOG.info("Fetching device");
-            deviceM = notCoreDeviceDAO.findBy(userId, deviceId);
+            LOG.info(String.format("Fetching device of user with email: «%s» and Id: «%s»", userM.getEmail(), userM.getId()));
+            deviceM = notCoreDeviceDAO.findBy(userM.getId(), deviceId);
             deviceM.setToken(deviceRegister.getToken());
             deviceM.setUpdateAt(new Date());
+            LOG.info(String.format("Device with email: «%s» and Id: «%s» is already exist", userM.getEmail(), userM.getId()));
             try {
                 LOG.info("Update device");
                 notCoreDeviceDAO.update(deviceM);
@@ -92,8 +119,8 @@ public class NotCoreStorageImpl implements NotCore {
                 throw new NotCoreException(String.format("Failed device UPDATE storage but it was registered in GNotifier"));
             }
         } catch (NoRecordFoundException e) {
-            LOG.info(String.format("The device with id %s of user id %s was not found", deviceId, userId));
-            deviceM = buildNewDeviceM(deviceRegister, userId);
+            LOG.info(String.format("The device with id %s of user id %s was not found. Will be created", deviceId, userM.getId()));
+            deviceM = buildNewDeviceM(deviceRegister, userM.getId());
             try {
                 LOG.info("Storage device");
                 notCoreDeviceDAO.save(deviceM);
@@ -103,231 +130,168 @@ public class NotCoreStorageImpl implements NotCore {
         } catch (TransactionStoppedException findDeviceError) {
             throw new NotCoreException(findDeviceError.getMessage());
         }
-        try {
-            LOG.info("Registry device in GNotifier");
-            gnSender.register(deviceRegister);
-        } catch (SenderException senderException) {
-            try {
-                if (deviceM.getUpdateAt() == null) {
-                    LOG.error(senderException.getMessage());
-                    LOG.info("Device will be delete because it are new and was failed in GNotifier register");
-                    notCoreDeviceDAO.delete(deviceM);
-                }
-            } catch (TransactionStoppedException deleteException) {
-                throw new NotCoreException(deleteException.getMessage());
-            }
-            throw new NotCoreException(senderException.getMessage(), senderException.getCode());
-        }
+        LOG.info(FINISHED);
     }
 
     @Override
-    public void desRegister(NotCoreChannel channel, Desregister desregister) throws NotCoreException {
+    public void desRegister(NotCoreChannel channel, Desregister desregister) throws NotCoreException, SenderException {
 
     }
 
     @Override
-    public void sendNotification(NotCoreChannel channel, PushNotification pushNotification) throws NotCoreException {
+    public void sendNotification(NotCoreChannel channel, PushNotification pushNotification) throws NotCoreException, SenderException {
+        LOG.info(STARTING);
         NotCoreUtility.verifyChannel(channel);
-        NotificationM notificationM = null;
-        UserM userM = null;
-        TopicM topicM = null;
-        Long templateId = pushNotification.getMessage().getTemplate().getId();
-        String topicName = pushNotification.getTopic();
-        String email = pushNotification.getUserId();
+        NotCoreUtility.verifyPojo(pushNotification);
+        LOG.info("GNotifier send push notification");
+        gnSender.sendNotification(pushNotification);
+        saveNotificationSentM(findNotificationSentM(pushNotification));
+        LOG.info(FINISHED);
+    }
+
+    private NotificationSentM findNotificationSentM(PushNotification pushNotification) throws NotCoreException {
+        LOG.info(STARTING);
         NotificationSentM notificationSentM = new NotificationSentM();
         try {
-            LOG.info(String.format("Fetching template with id %s", templateId));
-            notificationM = this.notCoreNotificationDAO.findBy(templateId);
+            LOG.info(String.format("Fetching template with id %s", pushNotification.getMessage().getTemplate().getId()));
+            NotificationM notificationM = notCoreNotificationDAO.findBy(pushNotification.getMessage().getTemplate().getId());
+            LOG.info("Template found");
             notificationSentM.setNotificationId(notificationM.getId());
             try {
+                String email = pushNotification.getUserId() == null ? "email is null" : pushNotification.getUserId();
                 LOG.info(String.format("Fetching user with email %s", email));
-                userM = this.notCoreUserDAO.findByEmail(email);
+                UserM userM = notCoreUserDAO.findByEmail(email);
+                LOG.info(String.format("UserM found. The notification must was send by «%s»", email));
                 notificationSentM.setUserId(userM.getId());
             } catch (NoRecordFoundException userException) {
-                LOG.info(String.format("User with email «%s» not found ", email));
-            }
-            try {
-                LOG.info(String.format("Fetching topic with name %s", topicName));
-                topicM = this.notCoreTopicDAO.findByName(topicName);
-                if (userM != null) throw new NotCoreException("Can't send push notification, it must be specific by email or topic but not both");
-                notificationSentM.setTopicId(topicM.getId());
-            } catch (NoRecordFoundException topicException) {
-                LOG.info(String.format("Topic with name «%s» not found ", topicName));
-                if (userM == null) throw new NotCoreException("Can't send push notification cause user and topic are invalid.");
+                LOG.info("User with email not found. The notification must was send by topic");
+                try {
+                    String topicName = pushNotification.getTopic() == null ? "Topic name is null" : pushNotification.getTopic();
+                    LOG.info(String.format("Fetching topic with name «%s»", topicName));
+                    notificationSentM.setTopicId(this.notCoreTopicDAO.findByName(topicName).getId());
+                    LOG.info("TopicM found");
+                } catch (NoRecordFoundException topicException) {
+                    throw new NotCoreException("Not notification type found. Tt's must be specific by topic or my email");
+                }
             }
         } catch (NoRecordFoundException e) {
-            throw new NotCoreException(String.format("Notification with template id «%s» not found ", templateId));
+            throw new NotCoreException(String.format("Notification with template id «%s» not found ", pushNotification.getMessage().getTemplate().getId()));
         } catch (TransactionStoppedException e) {
             throw new NotCoreException(e.getMessage());
         }
+        LOG.info(FINISHED);
+        return notificationSentM;
+    }
+
+    private void saveNotificationSentM(NotificationSentM notificationSentM) throws NotCoreException {
+        LOG.info(STARTING);
         try {
             LOG.info("NotCore stores push notification sent");
             notificationSentM.setRead(false);
             notCoreNotificationSentDAO.save(notificationSentM);
-            LOG.info("GNotifier send push notification");
-            gnSender.sendNotification(pushNotification);
         } catch (TransactionStoppedException storageFailed) {
             throw new NotCoreException(String.format("The notification couldn't stored"));
-        } catch (SenderException senderException) {
-            try {
-                notCoreNotificationSentDAO.delete(notificationSentM);
-            } catch (TransactionStoppedException deleteException) {
-                throw new NotCoreException(deleteException.getMessage());
-            }
-            throw new NotCoreException(senderException.getMessage(), senderException.getCode());
         }
+        LOG.info(FINISHED);
     }
 
     @Override
-    public void multiSendNotification(NotCoreChannel channel, Set<PushNotification> notifications) throws NotCoreException {
+    public void createTopic(NotCoreChannel channel, Topic topic) throws NotCoreException, SenderException {
+        LOG.info(STARTING);
         NotCoreUtility.verifyChannel(channel);
-        int errorsCount = 0;
-        for (PushNotification pushNotification : notifications) {
-            try {
-                sendNotification(channel, pushNotification);
-            } catch (NotCoreException e) {
-                errorsCount++;
-                LOG.info(String.format("Notification error number: %s | message error: %s", errorsCount, e.getMessage()));
-            }
-        }
-        if (errorsCount == notifications.size()) throw new NotCoreException("Couldn't sent any notification");
-    }
-
-    @Override
-    public void createTopic(NotCoreChannel channel, Topic topic) throws NotCoreException {
-        NotCoreUtility.verifyChannel(channel);
+        NotCoreUtility.verifyPojo(topic);
+        gnSender.createTopic(topic);
         try {
+            LOG.info("Verifying that doesn't exist topic");
             notCoreTopicDAO.findByName(topic.getName());
-            throw new NotCoreException(String.format("%s topic is already exist", topic.getName()));
+            throw new NotCoreException(String.format("«%s» topic is already exist", topic.getName()));
         } catch (NoRecordFoundException e) {
-            TopicM topicM = new TopicM();
-                topicM.setName(topic.getName());
-                topicM.setDescription(topic.getDescription());
             try {
-                LOG.info("Topic storage");
-                notCoreTopicDAO.save(topicM);
-                LOG.info("GNotifier create topic");
-                this.gnSender.createTopic(topic);
+                LOG.info("Topic is new");
+                notCoreTopicDAO.save(new TopicM(topic.getName(), topic.getDescription()));
             } catch (TransactionStoppedException storageFailed) {
                 throw new NotCoreException(storageFailed.getMessage());
-            } catch (SenderException senderException) {
-                try {
-                    LOG.info("Delete topic that failed in GN");
-                    notCoreTopicDAO.delete(topicM);
-                } catch (TransactionStoppedException deleteException) {
-                    throw new NotCoreException(deleteException.getMessage());
-                }
-                throw new NotCoreException(senderException.getMessage(), senderException.getCode());
             }
         } catch (TransactionStoppedException e) {
             throw new NotCoreException(e.getMessage());
         }
+        LOG.info(FINISHED);
     }
 
     @Override
-    public void deleteTopic(NotCoreChannel channel, String topicName) throws NotCoreException {
+    public void deleteTopic(NotCoreChannel channel, String topicName) throws NotCoreException, SenderException {
+        LOG.info(STARTING);
         NotCoreUtility.verifyChannel(channel);
+        LOG.info("GNotifier delete topic");
+        gnSender.deleteTopic(topicName);
         try {
             LOG.info(String.format("Fetching topic with %s name", topicName));
             TopicM topicM = notCoreTopicDAO.findByName(topicName);
-            LOG.info("GNotifier delete topic");
-            gnSender.deleteTopic(topicName);
             LOG.info("NotCore delete topic");
             notCoreTopicDAO.delete(topicM);
-        } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage(), e.getCode());
         } catch (NoRecordFoundException e) {
-            throw new NotCoreException(e.getMessage());
+            throw new NotCoreException(String.format("«%s» topic doesn't exist", topicName));
         } catch (TransactionStoppedException e) {
             throw new NotCoreException(e.getMessage());
         }
+        LOG.info(FINISHED);
     }
 
     @Override
-    public void updateTopic(NotCoreChannel channel, String topicName, Topic topic) throws NotCoreException {
+    public void updateTopic(NotCoreChannel channel, String topicName, Topic topic) throws NotCoreException, SenderException {
+        LOG.info(STARTING);
         NotCoreUtility.verifyChannel(channel);
+        LOG.info("GNotifier update");
+        gnSender.updateTopic(topicName, topic);
         try {
             LOG.info(String.format("Fetching topic with name %s", topicName));
             TopicM topicM = notCoreTopicDAO.findByName(topicName);
                 topicM.setName(topic.getName());
                 topicM.setDescription(topic.getDescription());
-            LOG.info(String.format("NotCore update topic name %s", topicName));
+            LOG.info("NotCore update topic");
             notCoreTopicDAO.update(topicM);
-            LOG.info(String.format("GNotifier update topic name %s", topicName));
-            gnSender.updateTopic(topicName, topic);
         } catch (NoRecordFoundException e) {
             throw new NotCoreException(String.format("«%s» topic doesn't exist", topicName));
         } catch (TransactionStoppedException e) {
             throw new NotCoreException(e.getMessage());
-        } catch (SenderException e) {
-            throw new NotCoreException(e.getMessage(), e.getCode());
         }
+        LOG.info(FINISHED);
     }
 
     @Override
-    public void subscribeUserIntoTopic(NotCoreChannel channel, String topicName, UserToSubscribe userToSubscribe) throws NotCoreException {
+    public void subscribeUserIntoTopic(NotCoreChannel channel, String topicName, UserToSubscribe userToSubscribe) throws NotCoreException, SenderException {
+        LOG.info(STARTING);
         NotCoreUtility.verifyChannel(channel);
-        Long userId = null;
-        Long topicId = null;
         String email = userToSubscribe.getUser();
-        try {
-            LOG.info(String.format("Fetching topic with name %s", topicName));
-            TopicM topicM = notCoreTopicDAO.findByName(topicName);
-            topicId = topicM.getId();
-            try {
-                LOG.info(String.format("Fetching user with email %s", email));
-                UserM userM = notCoreUserDAO.findByEmail(email);
-                userId = userM.getId();
-            } catch (NoRecordFoundException e) {
-                throw new NotCoreException(String.format("«%s» doesn't exist", email));
-            }
-        } catch (NoRecordFoundException e) {
-            throw new NotCoreException(String.format("«%s» topic doesn't exist", topicName));
-        } catch (TransactionStoppedException e) {
-            throw new NotCoreException(e.getMessage());
-        }
+        LOG.info(String.format("GNotifier subscribe «%s» in «%s» topic", email, topicName));
+        gnSender.subscribeUserIntoTopic(topicName, userToSubscribe);
+        UserTopicM userTopicM = findUserTopicMBy(topicName, email);
         try {
             LOG.info(String.format("Checking if «%s» is already in «%s» topic", email, topicName));
-            notCoreUserTopicDAO.findBy(userId, topicId);
+            notCoreUserTopicDAO.findBy(userTopicM.getUserId(), userTopicM.getTopicId());
             throw new NotCoreException(String.format("«%s» is already exist in «%s»", email, topicName));
         } catch (NoRecordFoundException e) {
-            UserTopicM userTopicM = new UserTopicM();
-                userTopicM.setTopicId(topicId);
-                userTopicM.setUserId(userId);
             try {
                 LOG.info(String.format("Storage «%s» in «%s» topic", email, topicName));
                 notCoreUserTopicDAO.save(userTopicM);
-                LOG.info(String.format("GNotifier subscribe «%s» in «%s» topic", email, topicName));
-                gnSender.subscribeUserIntoTopic(topicName, userToSubscribe);
             } catch (TransactionStoppedException e1) {
                 throw new NotCoreException(e.getMessage());
-            } catch (SenderException senderException) {
-                try {
-                    notCoreUserTopicDAO.delete(userTopicM);
-                    throw new NotCoreException(senderException.getMessage(), senderException.getCode());
-                } catch (TransactionStoppedException deleteException) {
-                    LOG.error(senderException.getMessage());
-                    throw new NotCoreException(deleteException.getMessage());
-                }
             }
         } catch (TransactionStoppedException e) {
             throw new NotCoreException(e.getMessage());
         }
+        LOG.info(FINISHED);
     }
 
-    @Override
-    public void unSubscribeUserIntoTopic(NotCoreChannel channel, String topicName, UserToUnSubscribe userToUnSubscribe) throws NotCoreException {
-        NotCoreUtility.verifyChannel(channel);
-        Long userId = null;
-        Long topicId = null;
-        String email = userToUnSubscribe.getUserId();
-        TopicM topicM = null;
+    private UserTopicM findUserTopicMBy(String topicName, String email) throws NotCoreException {
+        LOG.info(STARTING);
+        UserTopicM userTopicM = new UserTopicM();
         try {
             LOG.info(String.format("Fetching topic with name %s", topicName));
-            topicId = notCoreTopicDAO.findByName(topicName).getId();
+            userTopicM.setTopicId(notCoreTopicDAO.findByName(topicName).getId());
             try {
                 LOG.info(String.format("Fetching user with email %s", email));
-                userId = notCoreUserDAO.findByEmail(email).getId();
+                userTopicM.setUserId(notCoreUserDAO.findByEmail(email).getId());
             } catch (NoRecordFoundException e) {
                 throw new NotCoreException(String.format("«%s» doesn't exist", email));
             }
@@ -336,32 +300,34 @@ public class NotCoreStorageImpl implements NotCore {
         } catch (TransactionStoppedException e) {
             throw new NotCoreException(e.getMessage());
         }
+        LOG.info(FINISHED);
+        return userTopicM;
+    }
+
+    @Override
+    public void unSubscribeUserIntoTopic(NotCoreChannel channel, String topicName, UserToUnSubscribe userToUnSubscribe) throws NotCoreException, SenderException {
+        LOG.info(STARTING);
+        NotCoreUtility.verifyChannel(channel);
+        String email = userToUnSubscribe.getUserId();
+        LOG.info(String.format("GNotifier remove «%s» from «%s» topic", email, topicName));
+        gnSender.unSubscribeUserIntoTopic(topicName, userToUnSubscribe);
         try {
+            LOG.info("Verifying that topics and user already exist into database");
+            UserTopicM userTopicM = findUserTopicMBy(topicName, email);
             LOG.info(String.format("Checking if «%s» is already in «%s» topic", email, topicName));
-            UserTopicM userTopicM = notCoreUserTopicDAO.findBy(userId, topicId);
+            userTopicM = notCoreUserTopicDAO.findBy(userTopicM.getUserId(), userTopicM.getTopicId());
             LOG.info(String.format("Remove «%s» from «%s» topic", email, topicName));
             notCoreUserTopicDAO.delete(userTopicM);
-            LOG.info(String.format("GNotifier remove «%s» from «%s» topic", email, topicName));
-            gnSender.unSubscribeUserIntoTopic(topicName, userToUnSubscribe);
         } catch (NoRecordFoundException e) {
             throw new NotCoreException(String.format("«%s» doesn't exist in «%s»", email, topicName));
         } catch (TransactionStoppedException e) {
             throw new NotCoreException(e.getMessage());
-        } catch (SenderException senderException) {
-            try {
-                UserTopicM userTopicM = new UserTopicM();
-                    userTopicM.setTopicId(topicId);
-                    userTopicM.setUserId(userId);
-                notCoreUserTopicDAO.save(userTopicM);
-                throw new NotCoreException(senderException.getMessage(), senderException.getCode());
-            } catch (TransactionStoppedException saveException) {
-                LOG.error(senderException.getMessage());
-                throw new NotCoreException(saveException.getMessage());
-            }
         }
+        LOG.info(FINISHED);
     }
 
     private static DeviceM buildNewDeviceM(UserDeviceRegister deviceRegister, Long userId) {
+        LOG.info(STARTING);
         DeviceM deviceM = new DeviceM();
         deviceM.setUserId(userId);
         deviceM.setBrand(deviceRegister.getDevice().getBrand());
@@ -373,6 +339,7 @@ public class NotCoreStorageImpl implements NotCore {
         deviceM.setToken(deviceRegister.getToken());
         deviceM.setCreateAt(new Date());
         deviceM.setUpdateAt(null);
+        LOG.info(FINISHED);
         return deviceM;
     }
 }

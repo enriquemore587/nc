@@ -33,9 +33,7 @@ public abstract class NotCoreUtility {
 
     // TODO: This method will be removed to next versions when FMC is enable.
     public static void verifyChannel(NotCoreChannel channel) throws NotCoreException {
-        if (channel != NotCoreChannel.GNOTIFIER) {
-            throw new NotCoreException("This version is only to: " + NotCoreChannel.GNOTIFIER);
-        }
+        if (channel != NotCoreChannel.GNOTIFIER) throw new NotCoreException("This version is only to: " + NotCoreChannel.GNOTIFIER);
     }
 
     public static ApplicationToUserToRegister buildApplicationToUserToRegister() {
@@ -72,4 +70,13 @@ public abstract class NotCoreUtility {
             }
         });
     }
+
+    public static void verifyPojo(Object pojo) throws NotCoreException {
+        if (pojo == null) throw new NotCoreException(String.format("«%s» is null", pojo.getClass().getSimpleName()));
+    }
+
+    public static void verifyObject(Object attribute, String name) throws NotCoreException {
+        if (attribute == null) throw new NotCoreException(String.format("«%s» is null", name));
+    }
+
 }

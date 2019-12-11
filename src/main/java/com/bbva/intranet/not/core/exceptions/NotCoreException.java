@@ -18,16 +18,6 @@ public class NotCoreException extends Exception {
         this.message = message;
     }
 
-    /**
-     * Constructs a new exception with {@code null} as its detail message.
-     * The cause is not initialized, and may subsequently be initialized by a
-     * call to {@link #initCause}.
-     */
-    public NotCoreException(String message, Integer code) {
-        this.message = message;
-        this.code = code;
-    }
-
     public static class TransactionStoppedException {
     }
 
